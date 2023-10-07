@@ -1,0 +1,202 @@
+==
+<header id="header" class="header dark">
+
+
+
+
+
+
+
+    <div class="container flex-row-between header-container">
+
+
+
+        <a href="/" class="logo js-link leave-link-js" style="cursor: pointer !important">
+
+
+
+            <img src='{{ 'assets/img/logo.png'|theme }}' height='52'>
+
+
+
+        </a>
+
+
+
+        <nav class="menu-wrap">
+
+
+
+            <ul class="menu flex-row-between">
+
+
+
+                <li data-id="contact" class="menu-item flex-center js-link" style="cursor: pointer !important">
+
+
+
+                    <a href="/contact" class="menu-text menu-item-link leave-link-js" style="cursor: pointer !important">تماس با ما</a>
+
+
+
+                </li>
+
+
+
+                <li data-id="contact" class="menu-item flex-center js-link" style="cursor: pointer !important">
+
+
+
+                    <a href="/coming-soon" class="menu-text menu-item-link leave-link-js" style="cursor: pointer !important">وبلاگ</a>
+
+
+
+                </li>
+
+
+
+                <li data-id="contact" class="menu-item flex-center js-link" style="cursor: pointer !important">
+
+
+
+                    <a href="/coming-soon" class="menu-text menu-item-link leave-link-js" style="cursor: pointer !important">فروشگاه ایده</a>
+
+
+
+                </li>
+
+
+
+                <li data-id="pricing" class="menu-item flex-center js-link" style="cursor: pointer !important">
+
+
+
+                    <a href="/online-acceleration" class="menu-text menu-item-link leave-link-js" style="cursor: pointer !important">شتابدهی آنلاین</a>
+
+
+
+                </li>
+
+
+
+                <li data-id="latest" class="menu-item flex-center js-link" style="cursor: pointer !important">
+
+
+
+                    <a href="/acceleration-network" class="menu-text menu-item-link leave-link-js" style="cursor: pointer !important">شبکه شتابدهی</a>
+
+
+
+                </li>
+
+
+
+                <li data-id="company" class="menu-item flex-center js-link" style="cursor: pointer !important">
+
+
+
+                    <a href="/value-adding-cycle" class="menu-text menu-item-link leave-link-js" style="cursor: pointer !important">چرخه تولید ارزش</a>
+
+
+
+                </li>
+
+
+
+                <li data-id="product" class="menu-item flex-center js-link" style="cursor: pointer !important">
+
+
+
+                    <a href="/startup" class="menu-text menu-item-link leave-link-js" style="cursor: pointer !important">صفحه اصلی</a>
+
+
+
+                </li>
+
+
+
+            </ul>
+
+
+
+        </nav>
+
+
+
+        {% if user %}
+
+
+
+        <a href="/portal" class="button-bg js-link leave-link-js" style="cursor: pointer !important; color:#ffffff; padding:0 15px 0 15px;">
+
+
+
+            <span class="btn-text2 flex-center button-bg-text signup-btn" style="font-size:14px;">{{ user.name }} </span>
+
+
+
+        </a>
+
+
+
+        {% else %}
+
+
+
+        <a href="/signin" class="button-bg js-link leave-link-js" style="cursor: pointer !important">
+
+
+
+            <span class="btn-text2 flex-center button-bg-text signup-btn">ورود</span>
+
+
+
+        </a>
+
+
+
+        <a href="/verify" class="button-bg js-link leave-link-js" style="cursor: pointer !important">
+
+
+
+            <span class="btn-text2 flex-center button-bg-text signup-btn">ثبت نام</span>
+
+
+
+        </a>
+
+
+
+        {% endif %}
+
+
+
+        <div class="hamburger js-link" style="cursor: pointer !important">
+
+
+
+            <span class="hamburger-stick hamburger-stick-top"></span>
+
+
+
+            <span class="hamburger-stick hamburger-stick-mid"></span>
+
+
+
+            <span class="hamburger-stick hamburger-stick-bot"></span>
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+
+
+
+
+
+</header>

@@ -1,0 +1,30 @@
+title = "کانال"
+url = "/forum/channel/:slug"
+layout = "simple"
+is_hidden = 0
+
+[forumChannel]
+slug = "{{ :slug }}"
+memberPage = "aboutus"
+topicPage = "forum/topic"
+includeStyles = 1
+==
+<div class="page-title-area">
+    <div class="d-table">
+        <div class="d-table-cell">
+            <div class="container">
+                <h2>کانال</h2>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Page Title -->
+<div class="rainlab-forum">
+    {% partial forumChannel ~ "::title" %}
+
+    {% partial forumChannel ~ "::topics" %}
+
+    {% if topics %}
+        {% partial forumChannel ~ "::pagination" %}
+    {% endif %}
+</div>

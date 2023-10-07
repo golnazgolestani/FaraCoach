@@ -1,0 +1,237 @@
+title = "ورود"
+url = "/signin"
+is_hidden = 0
+
+[account]
+redirect = "/portal"
+paramCode = "code"
+forceSecure = 0
+requirePassword = 0
+==
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+	<title>شتابدهنده اندیشه خوارزم</title>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" type="image/png" href="{{ 'assets/img/favicon.ico'|theme }}"/>
+
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/vendor/bootstrap/css/bootstrap.min.css'|theme }}">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lalezar">
+
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css'|theme }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/fonts/iconic/css/material-design-iconic-font.min.css'|theme }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/vendor/animate/animate.css'|theme }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/vendor/css-hamburgers/hamburgers.min.css'|theme }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/vendor/animsition/css/animsition.min.css'|theme }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/vendor/select2/select2.min.css'|theme }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/vendor/daterangepicker/daterangepicker.css'|theme }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/css/util.css'|theme }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/css/main.css'|theme }}">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lalezar">
+
+    <style>
+
+    .container-login100 {
+
+      direction: rtl;
+
+    }
+
+    .container-login100 .input100 {
+
+      padding:0 25px 0 10px;
+
+    }
+
+    .container-login100 .label-checkbox100::before {
+
+      right:0;
+
+      left:auto;
+
+    }
+
+    .container-login100 .label-checkbox100 {
+
+      padding-right: 25px;
+
+    }
+
+    .alert-validate::after,
+
+    .alert-validate::before {
+
+      left:0 !important;
+
+      right:auto !important;
+
+      text-align: right !important;
+
+    }
+
+    .alert-validate::before {
+
+      padding: 4px 10px 4px 25px !important;
+
+    }
+
+    .alert-validate::after {
+
+      padding-left:10px;
+
+    }
+
+    </style>
+
+    {% framework extras %}
+
+</head>
+
+<body>
+
+	
+
+	<div class="limiter">
+
+		<div class="container-login100" style="background-image: url('{{ 'assets/img/signup-bg.png'|theme }}');">
+
+			<div class="wrap-login100">
+
+				<form class="login100-form validate-form" method="POST" action="http://lianrdc.com/signin" accept-charset="UTF-8" data-request="onSignin">
+
+    				<img src="{{ 'assets/img/logo.png'|theme }}" style="display: -webkit-box; margin: 0 auto; width: 100px"></img>
+
+    
+
+					<span class="login100-form-title p-b-34 p-t-27">
+
+						اندیشه خوارزم - ورود
+
+					</span>
+
+
+
+                    <div class="wrap-input100 validate-input" data-validate = "شماره همراه را وارد کنید">
+
+						<input class="input100" type="text" id="userSigninLogin" name="login" placeholder="شماره همراه">
+
+						<span class="focus-input100" data-placeholder="&#xf207;"></span>
+
+					</div>
+
+
+
+					<div class="wrap-input100 validate-input" data-validate="Enter password">
+
+						<input class="input100" type="password" id="userSigninPassword" name="password" placeholder="کلمه عبور">
+
+						<span class="focus-input100" data-placeholder="&#xf191;"></span>
+
+					</div>
+
+
+
+					<div class="contact100-form-checkbox">
+
+						<input class="input-checkbox100" id="ckb1" type="checkbox" name="remember">
+
+						<label class="label-checkbox100" for="ckb1">
+
+							مرا به خاطر بسپار
+
+						</label>
+
+					</div>
+
+
+
+					<div class="container-login100-form-btn">
+
+						<button class="login100-form-btn">
+
+							ورود
+
+						</button>
+
+					</div>
+
+
+
+					{#<div class="text-center p-t-90">
+
+						<a class="txt1" href="#">
+
+							کلمه عبور خود را فراموش کرده اید؟
+
+						</a>
+
+					</div>#}
+
+				</form>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	
+
+
+
+	<div id="dropDownSelect1"></div>
+
+	
+
+    <script src="{{ 'assets/vendor/jquery/jquery-3.2.1.min.js'|theme }}"></script>
+
+    <script src="{{ 'assets/vendor/animsition/js/animsition.min.js'|theme }}"></script>
+
+    <script src="{{ 'assets/vendor/bootstrap/js/popper.js'|theme }}"></script>
+
+    <script src="{{ 'assets/vendor/bootstrap/js/bootstrap.min.js'|theme }}"></script>
+
+    <script src="{{ 'assets/vendor/select2/select2.min.js'|theme }}"></script>
+
+    <script src="{{ 'assets/vendor/daterangepicker/moment.min.js'|theme }}"></script>
+
+    <script src="{{ 'assets/vendor/daterangepicker/daterangepicker.js'|theme }}"></script>
+
+    <script src="{{ 'assets/vendor/countdowntime/countdowntime.js'|theme }}"></script>
+
+    <script src="{{ 'assets/js/main.js'|theme }}"></script>
+
+    <script src="/modules/system/assets/js/framework.js"></script>
+
+    <script src="/modules/system/assets/js/framework.extras.js"></script>
+
+    
+
+    <script>
+
+        
+
+    </script>
+
+
+
+</body>
+
+</html>

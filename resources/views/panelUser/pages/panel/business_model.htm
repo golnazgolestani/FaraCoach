@@ -1,0 +1,579 @@
+title = "مدل کسب و کار"
+url = "/portal/business_model"
+layout = "panel"
+description = "مدل کسب و کار"
+is_hidden = 0
+
+[session]
+security = "user"
+redirect = "signin"
+==
+<?php
+use RainLab\User\Facades\Auth;
+use RahmanMahdi\Kharazm\Models\BusinessModel;
+use RahmanMahdi\Kharazm\Models\BusinessModelMember;
+use RahmanMahdi\Kharazm\Models\BusinessModelSwot;
+
+function onSave()
+{
+    $user = Auth::getUser();
+
+    $business_model = new BusinessModel();
+    $business_model->user_id                 = $user->id;
+    $business_model->title                   = post('title');
+    $business_model->problem_solving         = post('problem_solving');
+    $business_model->mission                 = post('mission');
+    $business_model->business_context        = post('business_context');
+    $business_model->product_type            = post('product_type');
+    $business_model->target_market           = post('target_market');
+    $business_model->competitive_advantages  = post('competitive_advantages');
+    $business_model->creativity              = post('creativity');
+    $business_model->market_description      = post('market_description');
+    $business_model->market_size             = post('market_size');
+    $business_model->competitors             = post('competitors');
+    $business_model->monetization_method     = post('monetization_method');
+    $business_model->strategy                = post('strategy');
+    $business_model->schedule                = post('schedule');
+    $business_model->pricing_methods         = post('pricing_methods');
+    $business_model->initial_estimate        = post('initial_estimate');
+    $business_model->forecast                = post('forecast');
+    $business_model->save();
+
+    $full_names                  = post('full_name');
+    $birth_dates                 = post('birth_date');
+    $mobiles                     = post('mobile');
+    $emails                      = post('email');
+    $degree_and_field_of_studies = post('degree_and_field_of_study');
+    $specialties                 = post('specialty');
+
+    for($i = 0; $i<count($full_names); $i++)
+    {
+        if(trim($full_names[$i]) != '')
+        {
+            $business_model_member = new BusinessModelMember();
+
+            $business_model_member->business_model_id         = $business_model->id;
+            $business_model_member->full_name                 = $full_names[$i];
+            $business_model_member->birth_date                = '0000-00-00';
+            if($birth_dates[0] != '')
+                $business_model_member->birth_date            = $birth_dates[$i];
+            $business_model_member->mobile                    = $mobiles[$i];
+            $business_model_member->email                     = $emails[$i];
+            $business_model_member->degree_and_field_of_study = $degree_and_field_of_studies[$i];
+            $business_model_member->specialty                 = $specialties[$i];
+
+            $business_model_member->save();
+        }
+    }
+
+    $strengths     = post('strength');
+    $weaknesses    = post('weakness');
+    $opportunities = post('opportunity');
+    $threats       = post('threat');
+    $specialties   = post('specialty');
+
+    for($i = 0; $i<count($strengths); $i++)
+    {
+        if(trim($strengths[$i]) != '')
+        {
+            $business_model_swot = new BusinessModelSwot();
+
+            $business_model_swot->business_model_id = $business_model->id;
+            $business_model_swot->strength          = $strengths[$i];
+            $business_model_swot->weakness          = $weaknesses[$i];
+            $business_model_swot->opportunity       = $opportunities[$i];
+            $business_model_swot->threat            = $threats[$i];
+
+            $business_model_swot->save();
+        }
+    }
+
+    Flash::success('مدل کسب و کار شما با موفقیت ثبت شد');
+    return Redirect::to('/portal/business_model');
+}
+?>
+==
+<!-- BEGIN: Content-->
+<div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="content-wrapper">
+        <div class="content-header row">
+            <div class="content-header-left col-12 mb-2 mt-1">
+                <div class="row breadcrumbs-top">
+                    <div class="col-12">
+                        <h5 class="content-header-title float-left pr-1">مدل کسب و کار</h5>
+                        <div class="breadcrumb-wrapper">
+                            <ol class="breadcrumb p-0 mb-0">
+                                <li class="breadcrumb-item"><a href="/portal"><i class="bx bx-home-alt"></i></a></li>
+                                <li class="breadcrumb-item active"> مدل کسب و کار</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-body"><!-- Form wizard with icon tabs section start -->
+            <section id="icon-tabs">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">ثبت مدل کسب و کار</h4>
+                            </div>
+                            <div class="card-content mt-2">
+                                <div class="card-body">
+                                    <form method="POST" id="new_wizard_form" data-request="onSave" data-request-validate class="wizard-validation">
+                                        <!-- Step 1 -->
+                                        <h6>
+                                            <i class="step-icon"></i>
+                                            <span class="fonticon-wrap">
+                                              <i class="livicon-evo" data-options="name:morph-doc.svg; size: 50px; style:lines; strokeColor:#adb5bd;"></i>
+                                            </span>
+                                        </h6>
+                                        <!-- Step 1 end-->
+                                        <!-- body content step 1 -->
+                                        <fieldset>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="form-group">
+                                                        <div class="controls">
+                                                            <label>عنوان</label>
+                                                            <input type="text" id="title" name="title" class="form-control required" placeholder="عنوان مدل کسب و کار را وارد کنید" value="" data-validation-required-message="وارد کردن عنوان الزامی است">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="form-group">
+                                                        <label>طرح مساله</label>
+                                                        <textarea id="problem_solving" name="problem_solving" rows="4" class="form-control required"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="form-group">
+                                                        <label>ماموریت</label>
+                                                        <textarea id="mission" name="mission" rows="4" class="form-control required"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="table-responsive">
+                                                        <div class="card">
+                                                            <div class="card-header">
+                                                                <h4 class="card-title">اعضای گروه</h4>
+                                                            </div>
+                                                            <div class="card-content">
+                                                                <div class="card-body">
+                                                                    <div data-repeater-list="contact">
+                                                                        <div class="row">
+                                                                            <!--<div class="col-12 mb-2">
+                                                                                <button class="btn btn-icon rounded-circle btn-primary" type="button" data-repeater-create="">
+                                                                                    <i class="bx bx-plus"></i>
+                                                                                </button>
+                                                                                <span class="ml-1 font-weight-bold text-primary">افزودن جدید</span>
+                                                                            </div>-->
+                                                                            <div class="col-md-2 col-2 mb-50">
+                                                                                <label class="text-nowrap">نام و نام خانوادگی</label>
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 mb-50">
+                                                                                <label class="text-nowrap">تاریخ تولد</label>
+                                                                            </div>
+                                                                            <div class="col-md-1 col-1 mb-50">
+                                                                                <label class="text-nowrap">تلفن همراه</label>
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 mb-50">
+                                                                                <label class="text-nowrap">پست الکترونیکی</label>
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 mb-50">
+                                                                                <label class="text-nowrap">مدرک تحصیلی و رشته تحصیلی</label>
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 mb-50">
+                                                                                <label class="text-nowrap">تخصص در تیم</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row justify-content-between" data-repeater-item="">
+                                                                            <div class="col-md-2 col-2 form-group d-flex align-items-center">
+                                                                                <input type="text" name="full_name[]" class="form-control" placeholder="نام و نام خانوادگی">
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 form-group">
+                                                                                <input type="text" name="birth_date[]" class="form-control" placeholder="تاریخ تولد">
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 form-group">
+                                                                                <input type="text" name="mobile[]" class="form-control text-left" placeholder="تلفن همراه" dir="ltr">
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 form-group">
+                                                                                <input type="text" name="email[]" class="form-control text-left" placeholder="پست الکترونیکی" dir="ltr">
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 form-group">
+                                                                                <input type="text" name="degree_and_field_of_study[]" class="form-control text-left" placeholder="مدرک تحصیلی و رشته تحصیلی" dir="ltr">
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 form-group">
+                                                                                <input type="text" name="specialty[]" class="form-control text-left" placeholder="تخصص در تیم" dir="ltr">
+                                                                            </div>
+                                                                            <!--<div class="col-md-1 col-1 form-group">
+                                                                                <button class="btn btn-icon btn-danger rounded-circle" type="button" data-repeater-delete="">
+                                                                                    <i class="bx bx-x"></i>
+                                                                                </button>
+                                                                            </div>-->
+                                                                        </div>
+                                                                        <div class="row justify-content-between" data-repeater-item="">
+                                                                            <div class="col-md-2 col-2 form-group d-flex align-items-center">
+                                                                                <input type="text" name="full_name[]" class="form-control" placeholder="نام و نام خانوادگی">
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 form-group">
+                                                                                <input type="text" name="birth_date[]" class="form-control" placeholder="تاریخ تولد">
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 form-group">
+                                                                                <input type="text" name="mobile[]" class="form-control text-left" placeholder="تلفن همراه" dir="ltr">
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 form-group">
+                                                                                <input type="text" name="email[]" class="form-control text-left" placeholder="پست الکترونیکی" dir="ltr">
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 form-group">
+                                                                                <input type="text" name="degree_and_field_of_study[]" class="form-control text-left" placeholder="مدرک تحصیلی و رشته تحصیلی" dir="ltr">
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 form-group">
+                                                                                <input type="text" name="specialty[]" class="form-control text-left" placeholder="تخصص در تیم" dir="ltr">
+                                                                            </div>
+                                                                            <!--<div class="col-md-1 col-1 form-group">
+                                                                                <button class="btn btn-icon btn-danger rounded-circle" type="button" data-repeater-delete="">
+                                                                                    <i class="bx bx-x"></i>
+                                                                                </button>
+                                                                            </div>-->
+                                                                        </div>
+                                                                        <div class="row justify-content-between" data-repeater-item="">
+                                                                            <div class="col-md-2 col-2 form-group d-flex align-items-center">
+                                                                                <input type="text" name="full_name[]" class="form-control" placeholder="نام و نام خانوادگی">
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 form-group">
+                                                                                <input type="text" name="birth_date[]" class="form-control" placeholder="تاریخ تولد">
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 form-group">
+                                                                                <input type="text" name="mobile[]" class="form-control text-left" placeholder="تلفن همراه" dir="ltr">
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 form-group">
+                                                                                <input type="text" name="email[]" class="form-control text-left" placeholder="پست الکترونیکی" dir="ltr">
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 form-group">
+                                                                                <input type="text" name="degree_and_field_of_study[]" class="form-control text-left" placeholder="مدرک تحصیلی و رشته تحصیلی" dir="ltr">
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 form-group">
+                                                                                <input type="text" name="specialty[]" class="form-control text-left" placeholder="تخصص در تیم" dir="ltr">
+                                                                            </div>
+                                                                            <!--<div class="col-md-1 col-1 form-group">
+                                                                                <button class="btn btn-icon btn-danger rounded-circle" type="button" data-repeater-delete="">
+                                                                                    <i class="bx bx-x"></i>
+                                                                                </button>
+                                                                            </div>-->
+                                                                        </div>
+                                                                        <div class="row justify-content-between" data-repeater-item="">
+                                                                            <div class="col-md-2 col-2 form-group d-flex align-items-center">
+                                                                                <input type="text" name="full_name[]" class="form-control" placeholder="نام و نام خانوادگی">
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 form-group">
+                                                                                <input type="text" name="birth_date[]" class="form-control" placeholder="تاریخ تولد">
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 form-group">
+                                                                                <input type="text" name="mobile[]" class="form-control text-left" placeholder="تلفن همراه" dir="ltr">
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 form-group">
+                                                                                <input type="text" name="email[]" class="form-control text-left" placeholder="پست الکترونیکی" dir="ltr">
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 form-group">
+                                                                                <input type="text" name="degree_and_field_of_study[]" class="form-control text-left" placeholder="مدرک تحصیلی و رشته تحصیلی" dir="ltr">
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 form-group">
+                                                                                <input type="text" name="specialty[]" class="form-control text-left" placeholder="تخصص در تیم" dir="ltr">
+                                                                            </div>
+                                                                            <!--<div class="col-md-1 col-1 form-group">
+                                                                                <button class="btn btn-icon btn-danger rounded-circle" type="button" data-repeater-delete="">
+                                                                                    <i class="bx bx-x"></i>
+                                                                                </button>
+                                                                            </div>-->
+                                                                        </div>
+                                                                        <div class="row justify-content-between" data-repeater-item="">
+                                                                            <div class="col-md-2 col-2 form-group d-flex align-items-center">
+                                                                                <input type="text" name="full_name[]" class="form-control" placeholder="نام و نام خانوادگی">
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 form-group">
+                                                                                <input type="text" name="birth_date[]" class="form-control" placeholder="تاریخ تولد">
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 form-group">
+                                                                                <input type="text" name="mobile[]" class="form-control text-left" placeholder="تلفن همراه" dir="ltr">
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 form-group">
+                                                                                <input type="text" name="email[]" class="form-control text-left" placeholder="پست الکترونیکی" dir="ltr">
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 form-group">
+                                                                                <input type="text" name="degree_and_field_of_study[]" class="form-control text-left" placeholder="مدرک تحصیلی و رشته تحصیلی" dir="ltr">
+                                                                            </div>
+                                                                            <div class="col-md-2 col-2 form-group">
+                                                                                <input type="text" name="specialty[]" class="form-control text-left" placeholder="تخصص در تیم" dir="ltr">
+                                                                            </div>
+                                                                            <!--<div class="col-md-1 col-1 form-group">
+                                                                                <button class="btn btn-icon btn-danger rounded-circle" type="button" data-repeater-delete="">
+                                                                                    <i class="bx bx-x"></i>
+                                                                                </button>
+                                                                            </div>-->
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <!-- body content step 1 end-->
+                                        <!-- Step 2 -->
+                                        <h6>
+                                            <i class="step-icon"></i>
+                                            <span class="fonticon-wrap">
+                                              <i class="livicon-evo" data-options="name:users.svg; size: 50px; style:lines; strokeColor:#adb5bd;"></i>
+                                            </span>
+                                        </h6>
+                                        <!-- Step 2 end-->
+                                        <!-- body content of step 2 -->
+                                        <fieldset>
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="form-group">
+                                                        <label>زمینه کسب و کار خود را مشخص کنید (تجاری – خدماتی – تولیدی) و در خصوص شناسایی محیط خود توضیح دهید</label>
+                                                        <textarea id="business_context" name="business_context" rows="4" class="form-control required"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="form-group">
+                                                        <label>نوع محصولات و یا خدمات کسب و کار خود را مشخص کنید</label>
+                                                        <textarea id="product_type" name="product_type" rows="4" class="form-control required"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="form-group">
+                                                        <label>بازار هدف</label>
+                                                        <textarea id="target_market" name="target_market" rows="4" class="form-control required"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="form-group">
+                                                        <label>مزیت های رقابتی</label>
+                                                        <textarea id="competitive_advantages" name="competitive_advantages" rows="4" class="form-control required"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="form-group">
+                                                        <label>خلاقیت و نوآوری طرح</label>
+                                                        <textarea id="creativity" name="creativity" rows="4" class="form-control required"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="table-responsive">
+                                                        <div class="card">
+                                                            <div class="card-header">
+                                                                <h4 class="card-title">عنوان جدول</h4>
+                                                            </div>
+                                                            <div class="card-content">
+                                                                <div class="card-body">
+                                                                    <div data-repeater-list="contact">
+                                                                        <div class="row">
+                                                                            <!--<div class="col-12 mb-2">
+                                                                                <button class="btn btn-icon rounded-circle btn-primary" type="button" data-repeater-create="">
+                                                                                    <i class="bx bx-plus"></i>
+                                                                                </button>
+                                                                                <span class="ml-1 font-weight-bold text-primary">افزودن جدید</span>
+                                                                            </div>-->
+                                                                            <div class="col-md-3 col-3 mb-50">
+                                                                                <label class="text-nowrap">قوت</label>
+                                                                            </div>
+                                                                            <div class="col-md-3 col-3 mb-50">
+                                                                                <label class="text-nowrap">ضعف</label>
+                                                                            </div>
+                                                                            <div class="col-md-3 col-3 mb-50">
+                                                                                <label class="text-nowrap">فرصت</label>
+                                                                            </div>
+                                                                            <div class="col-md-3 col-3 mb-50">
+                                                                                <label class="text-nowrap">تهدید</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row justify-content-between" data-repeater-item="">
+                                                                            <div class="col-md-3 col-3 form-group d-flex align-items-center">
+                                                                                <input type="text" name="strength[]" class="form-control" placeholder="قوت">
+                                                                            </div>
+                                                                            <div class="col-md-3 col-3 form-group">
+                                                                                <input type="text" name="weakness[]" class="form-control" placeholder="ضعف">
+                                                                            </div>
+                                                                            <div class="col-md-3 col-3 form-group">
+                                                                                <input type="text" name="opportunity[]" class="form-control text-left" placeholder="فرصت" dir="ltr">
+                                                                            </div>
+                                                                            <div class="col-md-3 col-3 form-group">
+                                                                                <input type="text" name="threat[]" class="form-control text-left" placeholder="تهدید" dir="ltr">
+                                                                            </div>
+                                                                            <!--<div class="col-md-1 col-1 form-group">
+                                                                                <button class="btn btn-icon btn-danger rounded-circle" type="button" data-repeater-delete="">
+                                                                                    <i class="bx bx-x"></i>
+                                                                                </button>
+                                                                            </div>-->
+                                                                        </div>
+                                                                        <div class="row justify-content-between" data-repeater-item="">
+                                                                            <div class="col-md-3 col-3 form-group d-flex align-items-center">
+                                                                                <input type="text" name="strength[]" class="form-control" placeholder="قوت">
+                                                                            </div>
+                                                                            <div class="col-md-3 col-3 form-group">
+                                                                                <input type="text" name="weakness[]" class="form-control" placeholder="ضعف">
+                                                                            </div>
+                                                                            <div class="col-md-3 col-3 form-group">
+                                                                                <input type="text" name="opportunity[]" class="form-control text-left" placeholder="فرصت" dir="ltr">
+                                                                            </div>
+                                                                            <div class="col-md-3 col-3 form-group">
+                                                                                <input type="text" name="threat[]" class="form-control text-left" placeholder="تهدید" dir="ltr">
+                                                                            </div>
+                                                                            <!--<div class="col-md-1 col-1 form-group">
+                                                                                <button class="btn btn-icon btn-danger rounded-circle" type="button" data-repeater-delete="">
+                                                                                    <i class="bx bx-x"></i>
+                                                                                </button>
+                                                                            </div>-->
+                                                                        </div>
+                                                                        <div class="row justify-content-between" data-repeater-item="">
+                                                                            <div class="col-md-3 col-3 form-group d-flex align-items-center">
+                                                                                <input type="text" name="strength[]" class="form-control" placeholder="قوت">
+                                                                            </div>
+                                                                            <div class="col-md-3 col-3 form-group">
+                                                                                <input type="text" name="weakness[]" class="form-control" placeholder="ضعف">
+                                                                            </div>
+                                                                            <div class="col-md-3 col-3 form-group">
+                                                                                <input type="text" name="opportunity[]" class="form-control text-left" placeholder="فرصت" dir="ltr">
+                                                                            </div>
+                                                                            <div class="col-md-3 col-3 form-group">
+                                                                                <input type="text" name="threat[]" class="form-control text-left" placeholder="تهدید" dir="ltr">
+                                                                            </div>
+                                                                            <!--<div class="col-md-1 col-1 form-group">
+                                                                                <button class="btn btn-icon btn-danger rounded-circle" type="button" data-repeater-delete="">
+                                                                                    <i class="bx bx-x"></i>
+                                                                                </button>
+                                                                            </div>-->
+                                                                        </div>
+                                                                        <div class="row justify-content-between" data-repeater-item="">
+                                                                            <div class="col-md-3 col-3 form-group d-flex align-items-center">
+                                                                                <input type="text" name="strength[]" class="form-control" placeholder="قوت">
+                                                                            </div>
+                                                                            <div class="col-md-3 col-3 form-group">
+                                                                                <input type="text" name="weakness[]" class="form-control" placeholder="ضعف">
+                                                                            </div>
+                                                                            <div class="col-md-3 col-3 form-group">
+                                                                                <input type="text" name="opportunity[]" class="form-control text-left" placeholder="فرصت" dir="ltr">
+                                                                            </div>
+                                                                            <div class="col-md-3 col-3 form-group">
+                                                                                <input type="text" name="threat[]" class="form-control text-left" placeholder="تهدید" dir="ltr">
+                                                                            </div>
+                                                                            <!--<div class="col-md-1 col-1 form-group">
+                                                                                <button class="btn btn-icon btn-danger rounded-circle" type="button" data-repeater-delete="">
+                                                                                    <i class="bx bx-x"></i>
+                                                                                </button>
+                                                                            </div>-->
+                                                                        </div>
+                                                                        <div class="row justify-content-between" data-repeater-item="">
+                                                                            <div class="col-md-3 col-3 form-group d-flex align-items-center">
+                                                                                <input type="text" name="strength[]" class="form-control" placeholder="قوت">
+                                                                            </div>
+                                                                            <div class="col-md-3 col-3 form-group">
+                                                                                <input type="text" name="weakness[]" class="form-control" placeholder="ضعف">
+                                                                            </div>
+                                                                            <div class="col-md-3 col-3 form-group">
+                                                                                <input type="text" name="opportunity[]" class="form-control text-left" placeholder="فرصت" dir="ltr">
+                                                                            </div>
+                                                                            <div class="col-md-3 col-3 form-group">
+                                                                                <input type="text" name="threat[]" class="form-control text-left" placeholder="تهدید" dir="ltr">
+                                                                            </div>
+                                                                            <!--<div class="col-md-1 col-1 form-group">
+                                                                                <button class="btn btn-icon btn-danger rounded-circle" type="button" data-repeater-delete="">
+                                                                                    <i class="bx bx-x"></i>
+                                                                                </button>
+                                                                            </div>-->
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <!-- body content of step 2 end-->
+                                        <!-- Step 3 -->
+                                        <h6>
+                                            <i class="step-icon"></i>
+                                            <span class="fonticon-wrap">
+                                              <i class="livicon-evo" data-options="name:home.svg; size: 50px; style:lines; strokeColor:#adb5bd;"></i>
+                                            </span>
+                                        </h6>
+                                        <!-- Step 3 end-->
+                                        <!-- body content of Step 3 -->
+                                        <fieldset>
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="form-group">
+                                                        <label>شرح بازار (منطقه جغرافیایی – شهر نوع مشتریان)</label>
+                                                        <textarea id="market_description" name="market_description" rows="4" class="form-control required"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="form-group">
+                                                        <label>اندازه بازار را چگونه برآورد می کنید</label>
+                                                        <textarea id="market_size" name="market_size" rows="4" class="form-control required"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="form-group">
+                                                        <label>رقبا و حساسیت و خطرها</label>
+                                                        <textarea id="competitors" name="competitors" rows="4" class="form-control required"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="form-group">
+                                                        <label>روش درآمد زایی</label>
+                                                        <textarea id="monetization_method" name="monetization_method" rows="4" class="form-control required"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="form-group">
+                                                        <label>استراتژی ورود به بازار</label>
+                                                        <textarea id="strategy" name="strategy" rows="4" class="form-control required"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="form-group">
+                                                        <label>برنامه زمانبندی رقابت در بازار</label>
+                                                        <textarea id="schedule" name="schedule" rows="4" class="form-control required"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="form-group">
+                                                        <label>شیوه های قیمت گذاری</label>
+                                                        <textarea id="pricing_methods" name="pricing_methods" rows="4" class="form-control required"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="form-group">
+                                                        <label>برآورد اولیه از میزان سرمایه را اندازی کسب و کارتان چقدر است ؟</label>
+                                                        <textarea id="initial_estimate" name="initial_estimate" rows="4" class="form-control required"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="form-group">
+                                                        <label>پیش بینی کوتاه مدت ، میان مدت و بلند مدت  از نتایج سرمایه گذاری</label>
+                                                        <textarea id="forecast" name="forecast" rows="4" class="form-control required"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <!-- body content of Step 3 end-->
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Form wizard with number tabs section end -->
+        </div>
+    </div>
+</div>
+<!-- END: Content-->

@@ -1,0 +1,132 @@
+title = "دوره های آموزشی"
+url = "/portal/courses"
+layout = "panel"
+description = "دوره های آموزشی"
+is_hidden = 0
+
+[session]
+security = "user"
+redirect = "signin"
+==
+<?php
+use RahmanMahdi\Kharazm\Models\Course;
+
+function onStart(){
+    $this['Courses'] = Course::orderBy('start_date', 'desc')->paginate(12);
+}
+?>
+==
+<!-- BEGIN: Content-->
+    <div class="app-content content">
+      <div class="content-overlay"></div>
+      <div class="content-wrapper">
+        <div class="content-header row">
+            <div class="content-header-left col-12 mb-2 mt-1">
+                <div class="row breadcrumbs-top">
+                    <div class="col-12">
+                        <h5 class="content-header-title float-left pr-1">دوره های آموزشی</h5>
+                        <div class="breadcrumb-wrapper">
+                            <ol class="breadcrumb p-0 mb-0">
+                                <li class="breadcrumb-item"><a href="/portal"><i class="bx bx-home-alt"></i></a></li>
+                                <li class="breadcrumb-item active"> دوره های آموزشی</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-body"><!-- users list start -->
+          <section class="users-list-wrapper">
+              <div class="users-list-filter px-1">
+                  <form>
+                      <div class="row border rounded py-2 mb-2">
+                          <div class="col-12 col-sm-6 col-lg-3">
+                              <label for="users-list-role">عنوان دوره</label>
+                              <fieldset class="form-group">
+                                <input type="text" class="form-control text-left" id="users-list-role">
+                              </fieldset>
+                          </div>
+                          <div class="col-12 col-sm-6 col-lg-3">
+                              <label for="teacher">مدرس</label>
+                              <fieldset class="form-group">
+                                  <input type="text" class="form-control text-left" id="teacher">
+                              </fieldset>
+                          </div>
+                          <div class="col-12 col-sm-6 col-lg-3">
+                              <label for="users-list-status">وضعیت</label>
+                              <fieldset class="form-group">
+                                  <select class="form-control" id="users-list-status">
+                                      <option value="">همه</option>
+                                      <option value="فعال">فعال</option>
+                                      <option value="بسته شده">بسته شده</option>
+                                  </select>
+                              </fieldset>
+                          </div>
+                          <div class="col-12 col-sm-6 col-lg-3 d-flex align-items-center">
+                              <button type="reset" class="btn btn-primary btn-block glow users-list-clear mb-0 mt-75">پاکسازی</button>
+                          </div>
+                      </div>
+                  </form>
+              </div>
+              <div class="users-list-table">
+                  <div class="card">
+                      <div class="card-content">
+                          <div class="card-body">
+                              <!-- datatable start -->
+                              <div class="table-responsive">
+                                  <table id="users-list-datatable" class="table">
+                                      <thead>
+                                          <tr>
+                                              <th>ردیف</th>
+                                              <th>عنوان دوره</th>
+                                              <th>مدرس</th>
+                                              <th>توضیحات</th>
+                                              <th>زمان شروع</th>
+                                              <th>طول دوره (ساعت)</th>
+                                              <th>قیمت (ريال)</th>
+                                              <th>وضعیت</th>
+                                              <th>ثبت نام</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                      {% for course in Courses %}
+                                          <tr>
+                                              <td>{{ loop.index }}</td>
+                                              <td><a href="/portal/view_course/{{ course.id }}">{{ course.title }} </a></td>
+                                              <td>{{ course.teacher }}</td>
+                                              <td>{{ course.description }}</td>
+                                              <td>{{ course.start_date|pDate }}</td>
+                                              <td>{{ course.total_hours }}</td>
+                                              <td>{{ course.price }}</td>
+                                              <td>
+                                                  {% if course.status == 0 %}
+                                                  <span class="badge bg-rgba-danger text-danger">غیرفعال</span>
+                                                  {% elseif course.status == 1 %}
+                                                  <span class="badge bg-rgba-success text-success">فعال (ثبت نام)</span>
+                                                  {% elseif course.status == 2 %}
+                                                  <span class="badge bg-rgba-success text-success">در حال برگزاری</span>
+                                                  {% elseif course.status == 3 %}
+                                                  <span class="badge bg-rgba-danger text-danger">مسدود شده</span>
+                                                  {% endif %}
+                                              </td>
+                                              <td>
+                                                  {% if course.status == 1 %}
+                                                  <a href="/portal/view_course/{{ course.id }}"><i class="bx bx-cart-alt"></i></a>
+                                                  {% endif %}
+                                              </td>
+                                          </tr>
+                                      {% endfor %}
+                                      </tbody>
+                                  </table>
+                              </div>
+                              <!-- datatable ends -->
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </section>
+          <!-- users list ends -->
+        </div>
+      </div>
+    </div>
+    <!-- END: Content-->

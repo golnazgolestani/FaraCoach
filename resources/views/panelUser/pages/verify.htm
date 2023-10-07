@@ -1,0 +1,213 @@
+title = "اعتبارسنجی شماره همراه"
+url = "/verify"
+description = "اعتبارسنجی شماره همراه"
+is_hidden = 0
+==
+<?php
+use acckt\kharazm\models\ActivationCode;
+
+function onStart()
+{
+    date_default_timezone_set("Asia/Tehran");
+//    echo Date("Y-m-d H:i:s");exit;
+    ActivationCode::where('created_at', '<', date("Y-m-d H:i:s", strtotime('5 minutes ago')))->delete();
+}
+
+function onSendValidationCode()
+{
+    date_default_timezone_set("Asia/Tehran");
+    if(is_null(post('mobile_01')))
+    {
+        Flash::error('لطفا شماره همراه را وارد کنید');
+        return Redirect::refresh();
+    }
+    
+    $this['activation_code'] = ActivationCode::where('mobile', post('mobile_01'))->first();
+    if($this['activation_code'])
+    {
+         Flash::error('کد اعتبار سنجی برای شما ارسال شده است');
+        return Redirect::to('/verify?mobile=' . post('mobile_01'));
+    }
+
+    $this['token'] = rand(10000,99999);
+
+    $result = Http::post('https://api.kavenegar.com/v1/5071456653466E4B724A697577662F6B4951367A6B6A6C76726635566448463163352B65416A30596A4C6F3D/verify/lookup.json', function($http){
+        $http->data(['receptor' => post('mobile_01'), 'token' => $this['token'], 'template' => 'verify']);
+    });
+
+    $status = json_decode($result->body)->return->status;
+
+    if($status == 200)
+    {
+        ActivationCode::where('updated_at', '<', date("Y-m-d H:i:s", strtotime('5 minutes ago')))->delete();
+        $activation_code = new ActivationCode;
+        $activation_code->mobile = post('mobile_01');
+        $activation_code->code = $this['token'];
+        $activation_code->save();
+    }
+    else
+    {
+        Flash::error('خطا در ارسال پیامک، لطفا دوباره تلاش کنید');
+        return Redirect::refresh();
+    }
+}
+?>
+==
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>شتابدهنده اندیشه خوارزم</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="{{ 'assets/img/favicon.ico'|theme }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/vendor/bootstrap/css/bootstrap.min.css'|theme }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lalezar">
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css'|theme }}">
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/fonts/iconic/css/material-design-iconic-font.min.css'|theme }}">
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/vendor/animate/animate.css'|theme }}">
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/vendor/css-hamburgers/hamburgers.min.css'|theme }}">
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/vendor/animsition/css/animsition.min.css'|theme }}">
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/vendor/select2/select2.min.css'|theme }}">
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/vendor/daterangepicker/daterangepicker.css'|theme }}">
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/css/util.css'|theme }}">
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/css/main.css'|theme }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lalezar">
+    <style>
+    .container-login100 {
+      direction: rtl;
+    }
+    .container-login100 .input100 {
+      padding:0 25px 0 10px;
+    }
+    .container-login100 .label-checkbox100::before {
+      right:0;
+      left:auto;
+    }
+    .container-login100 .label-checkbox100 {
+      padding-right: 25px;
+    }
+    .alert-validate::after,
+    .alert-validate::before {
+      left:0 !important;
+      right:auto !important;
+      text-align: right !important;
+    }
+    .alert-validate::before {
+      padding: 4px 10px 4px 25px !important;
+    }
+    .alert-validate::after {
+      padding-left:10px;
+    }
+    </style>
+    <link rel="stylesheet" property="stylesheet" href="/modules/system/assets/css/framework.extras.css">
+</head>
+<body>
+
+<div class="limiter">
+    <div class="container-login100" style="background-image: url('{{ 'assets/img/signup-bg.png'|theme }}');">
+        <div class="wrap-login100">
+            <form class="login100-form" data-request="onSendValidationCode" method="post" id="send_validation_code_form" style="display:{% if post('mobile') %}none{% endif %};">
+				<img src="{{ 'assets/img/logo.png'|theme }}" style="display: -webkit-box; margin: 0 auto; width: 100px"></img>
+
+                <span class="login100-form-title p-b-34 p-t-27">
+                     اندیشه خوارزم - اعتبارسنجی
+                </span>
+
+                <div id="step01">
+                    <div class="wrap-input100 validate-input" data-validate = "شماره همراه را وارد کنید">
+                        <input class="input100" type="text" id="mobile_01" name="mobile_01" placeholder="شماره همراه">
+                        <span class="focus-input100" data-placeholder="&#xf10b;"></span>
+                    </div>
+
+                    <div class="container-login100-form-btn">
+                        <button class="login100-form-btn" id="send_validation_code" type="submit">
+                            دریافت کد فعال سازی
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <form class="login100-form validate-form" action="/signup" method="post" id="check_validation_code_form" style="display: {% if not post('mobile') %}none{% endif %}">
+                <img src="{{ 'assets/img/logo.png'|theme }}" style="display: -webkit-box; margin: 0 auto; width: 100px"></img>
+
+                <span class="login100-form-title p-b-34 p-t-27">
+                     اندیشه خوارزم - اعتبارسنجی
+                </span>
+
+                <div id="step02">
+                    <div class="wrap-input100 validate-input" id="mobile_div" data-validate = "شماره همراه را وارد کنید">
+                        <input class="input100" type="text" id="mobile" name="mobile" placeholder="شماره همراه" value="{% if post('mobile') %}{{ post('mobile') }}{% endif %}">
+                        <span class="focus-input100" data-placeholder="&#xf10b;"></span>
+                    </div>
+
+                    <div class="wrap-input100 validate-input" id="validation_code_div" data-validate = "کد فعال سازی را وارد کنید">
+                        <input class="input100" type="text" id="validation_code" name="validation_code" placeholder="کد فعال سازی">
+                        <span class="focus-input100" data-placeholder="&#xf191;"></span>
+                    </div>
+
+                    <div class="container-login100-form-btn" id="check_validation_code_div">
+                        <button class="login100-form-btn" id="check_validation_code" name="check_validation_code" type="submit">
+                            بررسی کد فعال سازی
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="dropDownSelect1"></div>
+
+<script src="{{ 'assets/vendor/jquery/jquery-3.2.1.min.js'|theme }}"></script>
+<script src="{{ 'assets/vendor/animsition/js/animsition.min.js'|theme }}"></script>
+<script src="{{ 'assets/vendor/bootstrap/js/popper.js'|theme }}"></script>
+<script src="{{ 'assets/vendor/bootstrap/js/bootstrap.min.js'|theme }}"></script>
+<script src="{{ 'assets/vendor/select2/select2.min.js'|theme }}"></script>
+<script src="{{ 'assets/vendor/daterangepicker/moment.min.js'|theme }}"></script>
+<script src="{{ 'assets/vendor/daterangepicker/daterangepicker.js'|theme }}"></script>
+<script src="{{ 'assets/vendor/countdowntime/countdowntime.js'|theme }}"></script>
+<script src="{{ 'assets/js/main.js'|theme }}"></script>
+
+<script>
+    jQuery(document).ready(function($){
+        $("#send_validation_code").click(function(e) {
+            e.preventDefault();
+            /*$.post("https://api.kavenegar.com/v1/5071456653466E4B724A697577662F6B4951367A6B6A6C76726635566448463163352B65416A30596A4C6F3D/verify/lookup.json",
+            {
+                receptor: $("#mobile").val(),
+                token: 1000 + Math.floor((Math.random() * 10000) + 1),
+                template : "verify"
+                },
+                function(data, status){
+                    $("#send_validation_code_div").hide();
+                    $("#validation_code_div").show();
+                    $("#check_validation_code_div").show();
+                    //alert("Data: " + data + "\nStatus: " + status);
+                    alert('پیامک ارسال شد');
+            });*/
+            $("#send_validation_code_form").submit();
+            $("#send_validation_code_form").hide();
+            $('#mobile').val($("#mobile_01").val());
+            $("#check_validation_code_form").show();
+        });
+    })
+
+    /*$("#check_validation_code").click(function() {
+        $("#step01").hide();
+        $("#step02").show();
+        $('#username').val($("#mobile").val());
+    });*/
+</script>
+
+{% flash %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        $.oc.flashMsg({text: '{{ message }}', 'class': '{{ type }}', 'interval': 10})
+    }, false);
+</script>
+{% endflash %}
+
+<script src="/modules/system/assets/js/framework.js" defer></script>
+<script src="/modules/system/assets/js/framework.extras.js" defer></script>
+
+</body>
+</html>

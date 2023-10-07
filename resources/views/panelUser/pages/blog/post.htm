@@ -1,0 +1,108 @@
+title = "مطلب وبلاگ"
+url = "/blog/post/:slug"
+layout = "simple"
+is_hidden = 0
+
+[blogPost]
+slug = "{{ :slug }}"
+categoryPage = "blog/category"
+
+[blogCategories]
+slug = "{{ :slug }}"
+displayEmpty = 1
+categoryPage = "blog/category"
+
+[blogPosts]
+pageNumber = "{{ :page }}"
+postsPerPage = 5
+noPostsMessage = "No posts found"
+sortOrder = "published_at desc"
+categoryPage = "blog/category"
+postPage = "blog/post"
+==
+<?php
+use \RainLab\Blog\Models\Category;
+use \RainLab\Blog\Models\Post;
+
+function onStart(){
+	/*$this['categories'] = Category::get();*/
+	$this['LatestPosts'] = Post::orderBy('published_at', 'desc')->take(5)->get();
+}
+?>
+==
+<!-- BEGIN: Vendor CSS-->
+    <link rel="stylesheet" type="text/css" href="/themes/acckt/panel_assets/vendors/css/vendors.min.css">
+<!-- END: Vendor CSS-->
+{% set post = blogPost.post %}
+
+<!-- Start Page Title -->
+<div class="page-title-area d-none">
+    <div class="d-table">
+        <div class="d-table-cell">
+            <div class="container">
+                <h2>{{ post.title }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Page Title -->
+
+<!-- Start Blog Details Area -->
+<section class="blog-details-area ptb-80 mt-5">
+    <div class="container">
+        <div class="row">
+             <div class="col-lg-4 col-md-12">
+                <aside class="widget-area sticky-top" id="secondary">
+                    {% partial 'site/post_search' %}
+
+                    {#% partial 'site/latest_posts' %#}
+
+                    {% partial 'site/post_categories' %}
+
+                    {% partial 'site/post_archive' %}
+
+                    {% partial 'site/post_tags' %}
+
+                </aside>
+            </div>
+            <div class="col-lg-8 col-md-12">
+                <div class="blog-details-desc">
+                    {% if post.featured_images.count %}
+                    <div class="article-image">
+                        {% for image in post.featured_images|slice(0, 1) %}
+                        <img alt="" src="{{ image.path }}" alt="{{ image.description != null ? image.description : image.filename }}" title="{{ image.title != null ? image.title : post.title }}">
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div class="article-content">
+                        <div class="entry-meta my-3">
+                               <i data-feather="clock"></i> <a href="#">{{ post.published_at|date('j F Y') }}</a> / <i data-feather="user"></i> <a href="#">{{ post.user.first_name }} {{ post.user.last_name }}</a>
+                        </div>
+
+                        <h3>{{ post.title }}</h3>
+
+                        <p>{{ post.content_html | raw }}</p>
+                    </div>
+
+                    <div class="article-footer my-5">
+                        <div class="article-tags">
+                            {% if post.categories.count %}
+                                {% set categoryLinks = post.categories | map(c => "<a href=\"#{c.url}\">#{c.name}</a>") | join(' ') %}
+            
+                                {{ categoryLinks|raw }}
+                            {% else %}
+                                <a href="#">{{ 'rainlab.blog::lang.post.posted_byline_no_categories' }}</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <!--<div class="comments-area">
+                        {% partial 'site/post_comments' %}
+
+                        {% partial 'site/post_new_comment' %}
+                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Blog Details Area -->

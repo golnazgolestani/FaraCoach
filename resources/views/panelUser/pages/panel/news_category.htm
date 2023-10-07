@@ -1,0 +1,205 @@
+title = "دسته بندی اخبار"
+url = "/portal/news/category/:slug/:page"
+layout = "panel"
+description = "دسته بندی اخبار"
+is_hidden = 0
+
+[session]
+security = "user"
+redirect = "signin"
+
+[blogCategories]
+slug = "{{ :slug }}"
+displayEmpty = 1
+categoryPage = "panel/news_category"
+
+[blogPosts]
+pageNumber = "{{ :page }}"
+categoryFilter = "{{ :slug }}"
+postsPerPage = 10
+noPostsMessage = "No posts found"
+sortOrder = "published_at desc"
+categoryPage = "panel/news_category"
+postPage = "panel/news_detail"
+==
+<!-- BEGIN: Content-->
+
+<div class="app-content content">
+
+  <div class="content-overlay"></div>
+
+  <div class="content-wrapper">
+
+    <div class="content-header row">
+
+      <div class="content-header-left col-12 mb-2 mt-1">
+
+        <div class="row breadcrumbs-top">
+
+          <div class="col-12">
+
+            <h5 class="content-header-title float-left pr-1">اخبار</h5>
+
+            <div class="breadcrumb-wrapper">
+
+              <ol class="breadcrumb p-0 mb-0">
+
+                <li class="breadcrumb-item"><a href="/portal"><i class="bx bx-home-alt"></i></a></li>
+
+                <li class="breadcrumb-item active">اخبار</li>
+
+              </ol>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="content-body"><!-- Knowledge base categories Content start  -->
+
+      <section class="kb-categories">
+
+        <div class="row">
+
+          <!-- left side menubar section -->
+
+          <div class="col-md-2">
+
+            <div class="kb-sidebar">
+
+              <i class="bx bx-x font-medium-5 d-md-none kb-close-icon cursor-pointer"></i>
+
+              <h6 class="mb-2">دسته‌بندی ها</h6>
+
+              {% if blogCategories.categories|length > 0 %}
+
+                <ul class="list-unstyled">
+
+                    {% for category in blogCategories.categories %}
+
+                        <li class="mb-1"><a href="{{ category.url }}" class="text-muted kb-effect"> {{ category.name }} ({{ category.post_count }})</a></li>
+
+                    {% else %}
+
+                        <!--<li>دسته بندی نداریم</li>-->
+
+                    {% endfor %}
+
+                </ul>
+
+              {% else %}
+
+                <p>بدون دسته بندی</p>
+
+              {% endif %}
+
+            </div>
+
+          </div>
+
+          <!-- right side section -->
+
+          <div class="col-md-10">
+
+            <button class="btn btn-primary mb-1 kb-menu d-md-none"><i class="bx bx-menu mr-50"></i>دسته‌بندی ها</button>
+
+            <div class="row match-height">
+
+              
+
+              {% for post in posts %}
+
+                <div class="col-lg-4 col-sm-6">
+
+                    <div class="card" style="height: 239.3px;">
+
+                      <a href="{{ post.url }}">
+
+                        <div class="card-content">
+
+                          <div class="card-body">
+
+                            <h5 class="card-title">{{ post.title }}</h5>
+
+                            <p class="card-text text-muted kb-ellipsis">{{ post.summary }}</p>
+
+                          </div>
+
+                        </div>
+
+                      </a>
+
+                    </div>
+
+                </div>
+
+              {% else %}
+
+                <!--<p>هیچ مقاله ای وجود ندراد</p>-->
+
+              {% endfor %}
+
+      
+
+            </div>
+
+            
+
+            {% if posts.lastPage > 1 %}
+
+            <nav aria-label="Page navigation">
+
+              <ul class="pagination justify-content-center mt-2">
+
+                {% if posts.currentPage > 1 %}
+
+                <li class="page-item previous disabled"><a class="page-link" href="{{ this.page.baseFileName | page({ (__SELF__.pageParam): (posts.currentPage-1) }) }}"><i class="bx bx-chevron-right"></i></a></li>
+
+                {% endif %}
+
+
+
+                {% for page in 1..posts.lastPage %}
+
+                <li class="page-item {{ posts.currentPage == page ? 'active' : null }}" aria-current="page"><a class="page-link" href="{{ this.page.baseFileName | page({ (__SELF__.pageParam): page }) }}">{{ page }}</a></li>
+
+                {% endfor %}
+
+
+
+                {% if posts.lastPage > posts.currentPage %}
+
+                <li class="page-item next"><a class="page-link" href="{{ this.page.baseFileName | page({ (__SELF__.pageParam): (posts.currentPage+1) }) }}"><i class="bx bx-chevron-left"></i></a></li>
+
+                {% endif %}
+
+              </ul>
+
+            </nav>
+
+            {% endif %}
+
+          </div>
+
+          <div class="kb-overlay"></div>
+
+        </div>
+
+      </section>
+
+      <!-- Knowledge base categories Content ends -->
+
+
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- END: Content-->

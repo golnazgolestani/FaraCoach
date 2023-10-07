@@ -1,0 +1,56 @@
+description = "قالب ساده"
+
+[session]
+security = "all"
+==
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>شتابدهنده اندیشه خوارزم</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ 'assets/css/bootstrap.min.css'|theme }}">
+    <link href="{{ 'assets/css/simple.css'|theme }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ 'assets/css/home.css'|theme }}">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lalezar">
+    <link rel="shortcut icon" href="/themes/acckt/assets/img/favicon.ico" type="" sizes="" color="">
+    <link rel="icon" href="/themes/acckt/assets/img/favicon-16x16.png" type="image/png" sizes="16x16" color="">
+    <link rel="icon" href="/themes/acckt/assets/img/favicon-32x32.png" type="image/png" sizes="32x32" color="">
+    <style>
+        body {
+            background: #280d3a;
+        }
+        .navbar-dark .navbar-nav .nav-link {
+            font-size: 14px;
+        }
+        .centered {
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          /* bring your own prefixes */
+          transform: translate(-50%, -50%);
+        }
+        .coming-soon {
+            color: white;
+            font-size: 28px;
+            text-align: center;
+        }
+    </style>
+    <link rel="stylesheet" property="stylesheet" href="/modules/system/assets/css/framework.extras.css">
+     <!--BEGIN RAYCHAT CODE--> 
+     <script type="text/javascript">!function(){function t(){var t=document.createElement("script");t.type="text/javascript",t.async=!0,localStorage.getItem("rayToken")?t.src="https://app.raychat.io/scripts/js/"+o+"?rid="+localStorage.getItem("rayToken")+"&href="+window.location.href:t.src="https://app.raychat.io/scripts/js/"+o+"?href="+window.location.href;var e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(t,e)}var e=document,a=window,o="aa04d466-7289-48db-8b04-f9f07019b9d4";"complete"==e.readyState?t():a.attachEvent?a.attachEvent("onload",t):a.addEventListener("load",t,!1)}();</script> 
+     <!--END RAYCHAT CODE-->
+</head>
+<body>
+
+{% partial 'site/new_menu' %}
+{% page %}
+
+<script src="{{ 'assets/js/jquery.min.js'|theme }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="{{ 'assets/js/bootstrap.min.js'|theme }}"></script>
+<script src="/modules/system/assets/js/framework.js" defer></script>
+<script src="/modules/system/assets/js/framework.extras.js" defer></script>
+</body>
+</html>

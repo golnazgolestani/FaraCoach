@@ -1,0 +1,13 @@
+[viewBag]
+==
+<section class="widget widget_categories">
+    <h3 class="widget-title">دسته بندی</h3>
+
+    <ul>
+        {% for category in categories %}
+        <li><a href="{{ category.url }}">{{ category.name }}<span>({{ category.post_count }})</span></a></li>
+        {% else %}
+        <!--<li>دسته بندی نداریم</li>-->
+        {% endfor %}
+    </ul>
+</section>

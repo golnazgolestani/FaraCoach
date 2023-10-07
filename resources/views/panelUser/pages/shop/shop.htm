@@ -1,0 +1,147 @@
+title = "فروشگاه"
+url = "/shop"
+layout = "simple"
+is_hidden = 0
+==
+<?php
+use \Lovata\Shopaholic\Models\Product;
+
+	function onStart(){
+		$this['products'] = Product::active()->get();
+        //dd($this['products'][0]);
+        //$this['categories'] = Category::active()->get();
+        //Brand::active()
+        //Product::getByBrand($this->sValue)
+    }
+?>
+==
+<!-- Start Page Title -->
+<div class="page-title-area">
+    <div class="d-table">
+        <div class="d-table-cell">
+            <div class="container">
+                <h2>فروشگاه</h2>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Page Title -->
+
+<!-- Start Shop Area -->
+<section class="shop-area ptb-80">
+    <div class="container">
+        <div class="woocommerce-topbar">
+            <div class="row align-items-center">
+                <div class="col-lg-9 col-md-7 col-sm-7">
+                    <div class="woocommerce-result-count">
+                        <p>نمایش 1-8 از 14 نتیجه</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-5 col-sm-5">
+                    <div class="woocommerce-topbar-ordering">
+                        <select class="form-control">
+                            <option value="1">بر اساس محبوبیت</option>
+                            <option value="2">بر اساس میانگین امتیاز</option>
+                            <option value="0">بر اساس آخرین محصولات</option>
+                            <option value="3">بر اساس قیمت: ارزان تا گران</option>
+                            <option value="4">بر اساس قیمت: گران تا ارزان</option>
+                            <option value="5">بر اساس جدیدترین ها</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            {% for product in products %}
+            {% set offer = product.offer.first() %}
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="single-products">
+                    <div class="products-image">
+                        <a href="/product/{{ product.slug }}" tabindex="-1">
+                            {% if product.preview_image is not empty %}
+                            <img src="{{ product.preview_image.path }}" alt="{{ obProduct.preview_image.description }}" title="{{ obProduct.preview_image.title }}">
+                            {% else %}
+                            <img src="{{ 'assets/img/shop-image/1.jpg'|theme }}" alt="image">
+                            {% endif %}
+                        </a>
+
+                        <!--<ul>
+                            <li><a href="#" data-toggle="modal" data-target="#productsModalCenter"><i data-feather="search"></i></a></li>
+                            <li><a href="#"><i data-feather="heart"></i></a></li>
+                            <li><a href="#"><i data-feather="link"></i></a></li>
+                        </ul>-->
+                    </div>
+
+                    <div class="products-content">
+                        <h3><a href="/product/{{ product.slug }}">{{ product.name }}</a></h3>
+                        {% if offer.discount_price_value > 0 %}
+                        <span>{{ offer.price }} {{ offer.currency }}</span>
+                        <span>{{ offer.old_price }} {{ offer.currency }}</span>
+                        {% else %}
+                        <span>{{ offer.currency }} {{ offer.price }}</span>
+                        {% endif %}
+                        <!--<ul>
+                            <li><i class="flaticon-star-1"></i></li>
+                            <li><i class="flaticon-star-1"></i></li>
+                            <li><i class="flaticon-star-1"></i></li>
+                            <li><i class="flaticon-star-1"></i></li>
+                            <li><i class="flaticon-star-1"></i></li>
+                        </ul>-->
+                        <a href="/cart/add/{{ product.id }}" class="add-to-cart-btn">افزودن سبد خرید</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<!-- End Shop Area -->
+
+<!-- Start Products Modal -->
+<div class="modal fade" id="productsModalCenter" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="row align-items-center">
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="products-image">
+                        <img src="{{ 'assets/img/shop-image/1.jpg'|theme }}" alt="image">
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="products-content">
+                        <h3>مداد چوبی</h3>
+
+                        <div class="price">
+                            <span>20000 تومان</span> 19100 تومان
+                        </div>
+                        <p>لورم ایپسوم به سادگی ساختار چاپ و متن را در بر می گیرد. لورم ایپسوم به مدت 40 سال استاندارد صنعت بوده است. لورم ایپسوم به سادگی ساختار چاپ و متن را در بر می گیرد. لورم ایپسوم به مدت 40 سال استاندارد صنعت بوده است.</p>
+
+                        <form>
+                            <div class="quantity">
+                                <div class="input-counter">
+                                    <span class="minus-btn"><i data-feather="minus"></i></span>
+                                    <input type="text" min="1" value="1">
+                                    <span class="plus-btn"><i data-feather="plus"></i></span>
+                                </div>
+                            </div>
+
+                            <button type="submit">افزودن سبد خرید</button>
+                        </form>
+
+                        <div class="product-meta">
+                            <span>دسته بندی: <a href="#">مداد</a></span>
+                            <span>برچسب: <a href="#">چاپ</a></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Products Modal -->

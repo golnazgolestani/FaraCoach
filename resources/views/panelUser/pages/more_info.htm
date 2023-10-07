@@ -1,0 +1,114 @@
+title = "تکمیل اطلاعات ثبت نام"
+url = "/more-info"
+description = "فرم ایجاد شده با فرم ساز برای جمع آوری اطلاعات بیشتر"
+is_hidden = 0
+
+[renderForm]
+formCode = "ثبت-شتاب-گیرنده"
+redirect = "more_info"
+==
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <title>شتابدهنده اندیشه خوارزم</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.rtlcss.com/bootstrap/v4.5.3/css/bootstrap.min.css" integrity="sha384-JvExCACAZcHNJEc7156QaHXTnQL3hQBixvj5RV5buE7vgnNEzzskDtx9NQ4p6BJe" crossorigin="anonymous">
+    <link href="http://www.acckt.ir/themes/hellonesh/assets/css/app.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lalezar">
+    <style>
+        body {
+            background: #280d3a;
+            font-family: "Lalezar", sans-serif;
+            color: #fff;
+        }
+        input, select, textarea {
+            direction: rtl;
+        }
+
+</style>
+</head>
+<body>
+    <div class="container-fluid">
+    <div class="row">
+    <ul class="nav justify-content-center">
+  <li class="nav-item">
+    <a class="nav-link active" href="#">Active</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Link</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Link</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+  </li>
+</ul>
+    </div>
+    
+<div class="row">
+<div class="col-4">
+
+{% if renderForm.form %}
+
+    <div class="{{ renderForm.id }}"></div>
+
+    {% flash %}
+
+        {% if renderForm.form.code in message %}
+
+            <div class="alert alert-success">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {{ message|replace({ (renderForm.form.code) : ''})|raw }}
+            </div>
+
+        {% endif %}
+
+    {% endflash %}
+
+    {{ form_open({
+            'id': renderForm.form.code,
+            'class': renderForm.form.css_class,
+            'data-request': renderForm ~ '::onSubmit',
+            'data-request-data': {form: renderForm.form.code}
+        })
+    }}
+
+        {% for section in renderForm.form.sections if not section.fields is empty %}
+
+            {{ section.html|raw }}
+
+        {% endfor %}
+
+        {% for field in renderForm.form.fields if not field.section %}
+
+            {% if (field.field_type.code == 'file_uploader') %}
+                {% partial renderForm ~ '::file_uploader' %}
+            {% else %}
+                {{ field.html|raw }}
+            {% endif %}
+
+        {% endfor %}
+
+    {{ form_close() }}
+
+
+{% else %}
+
+    <p style="color: #ff0033;">
+        Form with code "{{ formCode }}" does not exist! Did you select correct form in component settings?
+    </p>
+
+{% endif %}
+</div>    
+</div>
+</div>
+
+<script src="{{ 'assets/js/jquery.min.js'|theme }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="{{ 'assets/js/bootstrap.min.js'|theme }}"></script>
+</body>
+</html>

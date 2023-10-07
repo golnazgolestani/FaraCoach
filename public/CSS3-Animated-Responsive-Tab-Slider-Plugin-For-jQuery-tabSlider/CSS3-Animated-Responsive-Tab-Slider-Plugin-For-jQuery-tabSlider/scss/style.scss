@@ -1,0 +1,376 @@
+@import "compass/css3";
+
+@import "compass";
+/* [ Global ] */
+/* google font cdn */
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,600&subset=latin,cyrillic);
+
+/* [ tools ] */
+// keyframes Mixin
+@mixin keyframes($name) {
+  @-webkit-keyframes #{$name} { @content; }
+  @-moz-keyframes #{$name}    { @content; }
+  @-ms-keyframes #{$name}     { @content; }
+  @keyframes #{$name}         { @content; } 
+}
+
+// Vendor Prefixing
+@mixin vendorize($property, $value) {
+    -webkit-#{$property}: $value;
+    -moz-#{$property}: $value;
+    -ms-#{$property}: $value;
+    -o-#{$property}: $value;
+    #{$property}: $value;
+}
+/* helper classes */
+.pull-right { float: right; }
+.pull-left  { float: left;  }
+/* [ TabSlider ] */
+ .tabSlider {   
+	      .ts-container {
+        width: 940px;
+        margin: 0 auto;
+        position: relative;
+          @media (max-width: 950px) {
+            width: 740px;
+          }
+          @media (max-width: 750px) {
+            width: 300px;
+          }
+          &:after {
+            content: "";
+            display: table;
+            clear: both;
+          }
+         &,
+         &:before, 
+         &:after { @include box-sizing(border-box); }
+      } // end ts-content
+			   
+    .ts-items {
+        height: 568px; // avoide ts-control jumping
+        position: relative;
+         &,
+         &:before, 
+         &:after { @include box-sizing(border-box); }
+      
+      .ts-item {
+        display: none;
+        height: 568px;
+        padding: 25px 0;
+        overflow: hidden;
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        background-repeat: no-repeat;
+        @include background-size(cover);
+        background-position: 0 300px;
+        @include single-transition (background, 1s, linear);
+         &,
+         &:before, 
+         &:after { @include box-sizing(border-box); }
+        
+        .ts-banner  { 
+          &,
+          img { display: none; }
+        }
+
+        // ts-grid
+        .ts-thumbnail { 
+          width: 25%; 
+         &,
+         &:before, 
+         &:after { @include box-sizing(border-box); }
+        }
+        .ts-content   { 
+          width: 70%; 
+         &,
+         &:before, 
+         &:after { @include box-sizing(border-box); }
+          @media (max-width: 750px) {
+            width: 100%; 
+          }
+        }
+
+        .set-layout {
+          &.thumb-cont {
+            .ts-thumbnail { float: left;  }
+            .ts-content   { float: right; }
+          }
+          &.cont-thumb {
+            .ts-content   { float: left; }
+            .ts-thumbnail { float: right;}
+          }
+        } // end set-layout
+        
+        // style inner blocks
+        .ts-thumbnail {
+          height: 515px;
+          position: relative;
+         &,
+         &:before, 
+         &:after { @include box-sizing(border-box); }
+
+          img {
+            height: auto;
+            margin: auto;
+            max-width: 100%;
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            @include vendorize(animation-duration, 1s);
+            @include vendorize(animation-fill-mode, both);
+          }
+          @media (max-width: 768px) {
+            display: none;
+          }
+        } // end ts-thumbnail
+        
+        .ts-title {
+          font-family: 'Open Sans', sans-serif;
+          font-size: 40px;
+          font-weight: 600; /* semi-bold */
+          text-align: right;
+          color: #fff;
+          background: #3498db;
+          padding: 40px;
+          display: block;
+          line-height: 60px;
+          margin: 60px 0 55px 0;
+          text-transform: uppercase;
+          @include vendorize(animation-duration, 1s); 
+          @include backface-visibility(visible);
+         &,
+         &:before, 
+         &:after { @include box-sizing(border-box); }
+          
+          @media (max-width: 950px) {
+            font-size: 30px;
+            padding: 30px;
+          }
+          @media (max-width: 750px) {
+            margin: 0 0 20px 0;
+            font-size: 18px;
+            padding: 20px;
+            line-height: 200%;
+          }
+        } // end ts-title
+        
+        .ts-btn {
+          background: #e74c3c;
+          border: 2px solid #e74c3c;
+          color: #fff;
+          margin: 0;
+          padding: 7px 109px 7px 26px; // line-height space 13 + 7 = 20 ( top and bottom )
+          font-family: 'Open Sans', sans-serif;
+          font-weight: 600; /* semi-bold */
+          text-transform: uppercase;
+          font-size: 30px;
+          line-height: 45px;
+          text-decoration: none;
+          display: block;
+          position: relative;
+          @include vendorize(animation-duration, 1s); 
+		          @include transition-timing-function(linear);
+         &,
+         &:before, 
+         &:after { @include box-sizing(border-box); }
+          
+          span,
+          small { 
+            display: block; 
+             &,
+             &:before, 
+             &:after { @include box-sizing(border-box); }
+          }
+          
+          span  { width: 280px; }
+          
+          small {
+            font-weight: 300;
+            font-size: 12px;
+            line-height: 100%;
+            padding-top: 7px;
+          }
+          
+          @media (max-width: 750px) {
+            font-size: 16px;
+            line-height: 200%;
+            padding-right: 70px;
+            span { width: 200px; }
+          }
+          
+          &.set-icon {
+            i {
+              position: absolute;
+              height: 30px;
+              top: 50%;
+              margin-top: -15px;
+            }
+            
+            &.to-right { 
+              i { right: 26px;  }
+            }
+            
+            &.to-left { 
+              i { left: 26px;  }
+              padding-right: 0;
+              padding-left: 109px;
+            }
+          }
+        } // end ts-btn
+        
+        &.is-active { 
+          //display: block; 
+          background-position: center center;
+          .ts-thumbnail {
+              img {
+                  @include  vendorize(animation-name, vanishIn);
+                }
+            }
+          .ts-title {
+          @include  vendorize(animation-name, presRIn);
+            }
+			.ts-btn { @include  vendorize(animation-name, button); }
+          
+        }
+      } // end ts-item
+			
+    } // end ts-items
+   
+   // tab slider control
+   .ts-control { 
+     background: #000;
+     display: block;
+     &:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+     ul {
+       margin: 0;
+       padding: 0;
+       li {
+         color: #fff;
+         float: left;
+         cursor: pointer;
+         padding: 20px 35px;
+         display: inline-block;
+          font-family: 'Open Sans', sans-serif;
+          font-size: 18px;
+          font-weight: 300; /* light */
+         border-right: 1px solid #333;
+         &,
+         &:before, 
+         &:after { @include box-sizing(border-box); }
+         
+         &.is-active {
+           background: #3498db;
+         }
+          @media (max-width: 750px) {
+            padding-right: 20px;
+            padding-left: 20px;
+            span { display: none; }
+            i { margin-right: 0; }
+          }
+       }
+     }
+   }
+   
+} //end tabSlider
+
+.ts-icon {
+  background-image: url(https://dl.dropboxusercontent.com/u/70204595/cdn/images/ts-icons.png);
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  display: inline-block;
+  position: relative;
+  margin-right: 9px;
+  &.auto {
+      background-position: -1px -3px;
+      width: 23px;
+      height: 11px;
+  }
+  &.medical {
+      background-position: -27px -2px;
+      width: 15px;
+      height: 13px;
+  }
+  &.food {
+      background-position: -46px -2px;
+      width: 14px;
+      height: 15px;
+  }
+}
+
+@include keyframes(button){
+    0% {
+        @include transparent;
+        left: -90px;
+    }
+	
+    100% {
+        @include opaque;
+        left: 0;
+    }
+}
+
+@include keyframes(vanishIn){
+    0% {
+        @include transparent;
+        @include transform-origin(50%, 50%);
+        @include transform ( scale(2) );
+        @include filter(blur(10px));
+    }
+    100% {
+        @include opaque;
+        @include transform-origin(50%, 50%);
+        @include transform ( scale(1) );
+        @include filter(blur(0px));
+    }
+}
+
+
+@include keyframes(presRIn) {
+  0%    { 
+        @include transparent;
+        
+        @include transform-origin( 50%, 50% ); 
+        @include transform ( perspective(600)  scale(.3, .3) rotateY(90deg)); 
+    }
+  60%    { 
+      @include opacity(.4);
+         @include transform-origin( 50%, 50% ); 
+        @include transform (perspective(600) scale(.7, .7) rotateY(0deg));
+        //@include transform( perspective(800) rotateY(0deg) ); 
+    }
+  70%    { 
+    @include opacity(.7);
+         @include transform-origin( 50%, 50% ); 
+        @include transform (perspective(600)  scale(1, 1) rotateY(10deg));
+        //@include transform( perspective(800) rotateY(0deg) ); 
+    }
+  75%    { 
+    @include opacity(.8);
+         @include transform-origin( 50%, 50% ); 
+        @include transform (perspective(600)  scale(1, 1) rotateY(-10deg));
+        //@include transform( perspective(800) rotateY(0deg) ); 
+    }
+  90%    { 
+    @include opacity(.9);
+         @include transform-origin( 50%, 50% ); 
+        @include transform (perspective(600)  scale(1, 1) rotateY(5deg));
+        //@include transform( perspective(800) rotateY(0deg) ); 
+    }
+  100%  { 
+    @include opacity(1);
+         @include transform-origin( 50%, 50% ); 
+        @include transform ( perspective(600) scale(1, 1) rotateY(0deg)); 
+        //@include transform( perspective(800) rotateY(180deg) ); 
+    }
+}

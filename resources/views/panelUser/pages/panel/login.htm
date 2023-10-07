@@ -1,0 +1,156 @@
+title = "ورود به پورتال"
+url = "/portal/login"
+description = "ورود به پورتال"
+is_hidden = 0
+
+[account]
+redirect = "/portal"
+paramCode = "code"
+forceSecure = 0
+requirePassword = 0
+
+[sociallogin]
+==
+<!DOCTYPE html>
+<html class="loading" lang="fa" data-textdirection="rtl" dir="rtl">
+<!-- BEGIN: Head-->
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+	<title>صفحه ورود</title>
+	<link rel="shortcut icon" type="image/x-icon" href="{{ 'assets/img/favicon.ico'|theme }}">
+	<meta name="theme-color" content="#5A8DEE">
+
+	<!-- BEGIN: Vendor CSS-->
+	<link rel="stylesheet" type="text/css" href="{{ 'panel_assets/vendors/css/vendors.min.css'|theme }}">
+	<!-- END: Vendor CSS-->
+
+	<!-- BEGIN: Theme CSS-->
+	<link rel="stylesheet" type="text/css" href="{{ 'panel_assets/css/bootstrap.min.css'|theme }}">
+	<link rel="stylesheet" type="text/css" href="{{ 'panel_assets/css/bootstrap-extended.css'|theme }}">
+	<link rel="stylesheet" type="text/css" href="{{ 'panel_assets/css/colors.css'|theme }}">
+	<link rel="stylesheet" type="text/css" href="{{ 'panel_assets/css/components.css'|theme }}">
+	<link rel="stylesheet" type="text/css" href="{{ 'panel_assets/css/themes/dark-layout.css'|theme }}">
+	<link rel="stylesheet" type="text/css" href="{{ 'panel_assets/css/themes/semi-dark-layout.css'|theme }}">
+	<!-- END: Theme CSS-->
+
+	<!-- BEGIN: Page CSS-->
+	<link rel="stylesheet" type="text/css" href="{{ 'panel_assets/css/core/menu/menu-types/vertical-menu.css'|theme }}">
+	<link rel="stylesheet" type="text/css" href="{{ 'panel_assets/css/pages/authentication.css'|theme }}">
+	<!-- END: Page CSS-->
+
+	{% framework extras %}
+</head>
+<!-- END: Head-->
+
+<!-- BEGIN: Body-->
+<body class="vertical-layout vertical-menu-modern dark-layout 1-column  navbar-sticky footer-static bg-full-screen-image  blank-page blank-page" data-open="click" data-menu="vertical-menu-modern" data-col="1-column" data-layout="dark-layout">
+<!-- BEGIN: Content-->
+<div class="app-content content">
+	<div class="content-overlay"></div>
+	<div class="content-wrapper">
+		<div class="content-header row">
+		</div>
+		<div class="content-body"><!-- login page start -->
+		<section id="auth-login" class="row flexbox-container">
+				<div class="col-xl-8 col-11">
+					<div class="card bg-authentication mb-0">
+						<div class="row m-0">
+							<!-- left section-login -->
+							<div class="col-md-6 col-12 px-0">
+								<div class="card disable-rounded-right mb-0 p-2 h-100 d-flex justify-content-center">
+									<div class="card-header pb-1">
+										<div class="card-title">
+											<h4 class="text-center mb-2">خوش آمدید</h4>
+										</div>
+									</div>
+									<div class="card-content">
+										<div class="card-body">
+											<div class="d-flex flex-md-row flex-column justify-content-around">
+												{% for name, link in social_login_links %}
+												<!--<a href="{{ link }}?s={{ 'panel/index'|page }}&f={{ 'panel/login'|page }}" class="btn btn-social btn-google btn-block font-small-3 mr-md-1 mb-md-0 mb-1"><i class="bx bxl-{{ name|lower }} font-medium-3"></i><span class="pl-50 d-block text-center">{{ name }}</span></a>-->
+												<a href="{{ link }}?s=/portal&f=/portal/login" class="btn btn-social btn-google btn-block font-small-3 mr-md-1 mb-md-0 mb-1"><i class="bx bxl-{{ name|lower }} font-medium-3"></i><span class="pl-50 d-block text-center">{{ name }}</span></a>
+												{% endfor %}
+											</div>
+											<div class="divider">
+												<div class="divider-text text-uppercase text-muted"><small>یا توسط شماره همراه وارد شوید</small>
+												</div>
+											</div>
+											<form method="POST" action="http://www.acckt.ir/signin" accept-charset="UTF-8" data-request="onSignin">
+												<div class="form-group mb-50">
+													<label class="text-bold-700" for="userSigninLogin">شماره همراه</label>
+													<input type="text" class="form-control text-left" id="userSigninLogin" name="login" placeholder="شماره همراه" dir="ltr">
+												</div>
+												<div class="form-group">
+													<label class="text-bold-700" for="exampleInputPassword1">رمز عبور</label>
+													<input type="password" class="form-control text-left" id="exampleInputPassword1" name="password" placeholder="رمز عبور" dir="ltr">
+												</div>
+												<div class="form-group d-flex flex-md-row flex-column justify-content-between align-items-center">
+													<div class="text-left">
+														<div class="checkbox checkbox-sm">
+															<input type="checkbox" class="form-check-input" id="exampleCheck1" name="remember">
+															<label class="checkboxsmall" for="exampleCheck1"><small>مرا به خاطر بسپار</small></label>
+														</div>
+													</div>
+													<div class="text-right line-height-2"><a href="/portal/forgot_password" class="card-link"><small>رمز عبورتان را فراموش کرده اید؟</small></a></div>
+												</div>
+												<button type="submit" class="btn btn-primary glow w-100 position-relative">ورود<i id="icon-arrow" class="bx bx-left-arrow-alt"></i></button>
+											</form>
+											<hr>
+											<div class="text-center"><small class="mr-25">حسابی ندارید؟</small><a href="/signup"><small>ثبت نام</small></a></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- right section image -->
+							<div class="col-md-6 d-md-block d-none text-center align-self-center p-3">
+								<div class="card-content">
+									<img class="img-fluid" src="{{ 'panel_assets/images/pages/login.png'|theme }}" alt="branding logo">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- login page ends -->
+
+		</div>
+	</div>
+</div>
+<!-- END: Content-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- BEGIN: Vendor JS-->
+<script src="{{ 'panel_assets/vendors/js/vendors.min.js'|theme }}"></script>
+<script src="{{ 'panel_assets/fonts/LivIconsEvo/js/LivIconsEvo.tools.min.js'|theme }}"></script>
+<script src="{{ 'panel_assets/fonts/LivIconsEvo/js/LivIconsEvo.defaults.js'|theme }}"></script>
+<script src="{{ 'panel_assets/fonts/LivIconsEvo/js/LivIconsEvo.min.js'|theme }}"></script>
+<!-- BEGIN Vendor JS-->
+
+<!-- BEGIN: Page Vendor JS-->
+<!-- END: Page Vendor JS-->
+
+<!-- BEGIN: Theme JS-->
+<script src="{{ 'panel_assets/js/scripts/configs/vertical-menu-dark.js'|theme }}"></script>
+<script src="{{ 'panel_assets/js/core/app-menu.js'|theme }}"></script>
+<script src="{{ 'panel_assets/js/core/app.js'|theme }}"></script>
+<script src="{{ 'panel_assets/js/scripts/components.js'|theme }}"></script>
+<script src="{{ 'panel_assets/js/scripts/footer.js'|theme }}"></script>
+<!-- END: Theme JS-->
+
+<!-- BEGIN: Page JS-->
+<script src="/modules/system/assets/js/framework.js"></script>
+<script src="/modules/system/assets/js/framework.extras.js"></script>
+<!-- END: Page JS-->
+
+{% flash %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        $.oc.flashMsg({text: '{{ message }}', 'class': '{{ type }}', 'interval': 10})
+    }, false);
+</script>
+{% endflash %}
+
+</body>
+<!-- END: Body-->
+</html>

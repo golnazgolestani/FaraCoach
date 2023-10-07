@@ -1,0 +1,216 @@
+title = "کلاس آنلاین"
+url = "/portal/online_class"
+layout = "panel"
+description = "کلاس آنلاین"
+is_hidden = 0
+
+[session]
+security = "user"
+redirect = "signin"
+==
+  <!-- BEGIN: Content-->
+    <div class="app-content content">
+      <div class="content-overlay"></div>
+      <div class="content-wrapper">
+        <div class="content-header row">
+            <div class="content-header-left col-12 mb-2 mt-1">
+                <div class="row breadcrumbs-top">
+                    <div class="col-12">
+                        <h5 class="content-header-title float-left pr-1">کلاس آنلاین</h5>
+                        <div class="breadcrumb-wrapper">
+                            <ol class="breadcrumb p-0 mb-0">
+                                <li class="breadcrumb-item"><a href="/portal"><i class="bx bx-home-alt"></i></a></li>
+                                <li class="breadcrumb-item active"> کلاس آنلاین</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-body"><!-- users list start -->
+          <section class="users-list-wrapper">
+              <div class="users-list-filter px-1">
+                  <form>
+                      <div class="row border rounded py-2 mb-2">
+                          <div class="col-12 col-sm-6 col-lg-3">
+                              <label for="users-list-role">عنوان کلاس</label>
+                              <fieldset class="form-group">
+                                <input type="text" class="form-control text-left" id="users-list-role">
+                              </fieldset>
+                          </div>
+                          <div class="col-12 col-sm-6 col-lg-3">
+                              <label for="teacher">مدرس</label>
+                              <fieldset class="form-group">
+                                  <input type="text" class="form-control text-left" id="teacher">
+                              </fieldset>
+                          </div>
+                          <div class="col-12 col-sm-6 col-lg-3">
+                              <label for="users-list-status">وضعیت</label>
+                              <fieldset class="form-group">
+                                  <select class="form-control" id="users-list-status">
+                                      <option value="">همه</option>
+                                      <option value="فعال">فعال</option>
+                                      <option value="بسته شده">بسته شده</option>
+                                  </select>
+                              </fieldset>
+                          </div>
+                          <div class="col-12 col-sm-6 col-lg-3 d-flex align-items-center">
+                              <button type="reset" class="btn btn-primary btn-block glow users-list-clear mb-0 mt-75">پاکسازی</button>
+                          </div>
+                      </div>
+                  </form>
+              </div>
+              <div class="users-list-table">
+                  <div class="card">
+                      <div class="card-content">
+                          <div class="card-body">
+                              <!-- datatable start -->
+                              <div class="table-responsive">
+                                  <table id="users-list-datatable" class="table">
+                                      <thead>
+                                          <tr>
+                                              <th>ردیف</th>
+                                              <th>عنوان کلاس</th>
+                                              <th>مدرس</th>
+                                              <th>توضیحات</th>
+                                              <th>زمان شروع</th>
+                                              <th>قیمت (ريال)</th>
+                                              <th>وضعیت</th>
+                                              <th>ثبت نام</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                          <tr>
+                                              <td>1</td>
+                                              <td><a href="/portal/view_online_class">دوره آموزشی اصول فروش (Sales Fundamentals) </a></td>
+                                              <td>جف بلومفیلد</td>
+                                              <td>حدود  60 دقیقه ویدئو</td>
+                                              <td>1399/01/14</td>
+                                              <td>500،000</td>
+                                              <td><span class="badge bg-rgba-success text-success">فعال</span></td>
+                                              <td><a href="/portal/view_online_class"><i class="bx bx-cart-alt"></i></a></td>
+                                          </tr>
+                                          <tr>
+                                              <td>2</td>
+                                              <td><a href="/portal/view_online_class">دوره آموزشی روابط عمومی مدرن (public relations)</a></td>
+                                              <td>Deirdre Breakenridge</td>
+                                              <td>حدود  140 دقیقه ویدئو</td>
+                                              <td>1399/01/15</td>
+                                              <td>12،000،000</td>
+                                              <td><span class="badge bg-rgba-success text-success">فعال</span></td>
+                                              <td><a href="/portal/view_online_class"><i class="bx bx-cart-alt"></i></a></td>
+                                          </tr>
+                                          <tr>
+                                              <td>3</td>
+                                              <td><a href="/portal/view_online_class">دوره آموزشی تحلیل و مدل سازی کسب و کار (Business Model)</a></td>
+                                              <td>پژمان حق پناه</td>
+                                              <td>بیش از 130 دقیقه فایل ویدئویی</td>
+                                              <td>1399/01/16</td>
+                                              <td>8،000،000</td>
+                                              <td><span class="badge bg-rgba-success text-success">فعال</span></td>
+                                              <td><a href="/portal/view_online_class"><i class="bx bx-cart-alt"></i></a></td>
+                                          </tr>
+                                          <tr>
+                                              <td>4</td>
+                                              <td><a href="/portal/view_online_class">دوره آموزشی تحلیل فیلم گرگ وال استریت (The Wolf of Wall Street)</a></td>
+                                              <td>فربد طهرانی</td>
+                                              <td>حدود 150 دقیقه ویدئو</td>
+                                              <td>1399/01/17</td>
+                                              <td>18،000،000</td>
+                                              <td><span class="badge bg-rgba-danger text-danger">مسدود شده</span></td>
+                                              <td><a href="/portal/view_online_class"><i class="bx bx-cart-alt"></i></a></td>
+                                          </tr>
+                                          <tr>
+                                              <td>5</td>
+                                              <td><a href="/portal/view_online_class">دوره جامع آموزش پیاده سازی الزامات استاندارد ISO 17025:2017</a></td>
+                                              <td>ملودی هوشمند</td>
+                                              <td>بیش از 13 ساعت آموزش ویدئویی</td>
+                                              <td>1399/01/18</td>
+                                              <td>50،000،000</td>
+                                              <td><span class="badge bg-rgba-danger text-danger">مسدود شده</span></td>
+                                              <td><a href="/portal/view_online_class"><i class="bx bx-cart-alt"></i></a></td>
+                                          </tr>
+                                          <tr>
+                                              <td>6</td>
+                                              <td><a href="/portal/view_online_class">دوره آموزشی علم فروش (Sience Of Sales) - دوبله فارسی</a></td>
+                                              <td>جف بلومفیلد</td>
+                                              <td>حدود  67 دقیقه ویدئو</td>
+                                              <td>1399/01/19</td>
+                                              <td>24،000،000</td>
+                                              <td><span class="badge bg-rgba-success text-success">فعال</span></td>
+                                              <td><a href="/portal/view_online_class"><i class="bx bx-cart-alt"></i></a></td>
+                                          </tr>
+                                          <tr>
+                                              <td>7</td>
+                                              <td><a href="/portal/view_online_class">دوره رزومه نویسی حرفه ای و بین المللی بر پایه لینکدین Linkedin</a></td>
+                                              <td>پژمان حق پناه</td>
+                                              <td>حدود یکساعت فایل ویدئویی</td>
+                                              <td>1399/01/20</td>
+                                              <td>31،000،000</td>
+                                              <td><span class="badge bg-rgba-success text-success">فعال</span></td>
+                                              <td><a href="/portal/view_online_class"><i class="bx bx-cart-alt"></i></a></td>
+                                          </tr>
+                                          <tr>
+                                              <td>8</td>
+                                              <td><a href="/portal/view_online_class">دوره بازاریابی محتوا (Content marketing) در صنف دکوراسیون داخلی</a></td>
+                                              <td>مهدی سیاح نیا</td>
+                                              <td>حدود  90 دقیقه ویدئو</td>
+                                              <td>1399/01/21</td>
+                                              <td>25،000،000</td>
+                                              <td><span class="badge bg-rgba-success text-success">فعال</span></td>
+                                              <td><a href="/portal/view_online_class"><i class="bx bx-cart-alt"></i></a></td>
+                                          </tr>
+                                          <tr>
+                                              <td>9</td>
+                                              <td><a href="/portal/view_online_class">دوره آموزشی نقشه راه مربیان و مدرسان کسب و کار</a></td>
+                                              <td>فربد طهرانی</td>
+                                              <td>حدود 185دقیقه ویدئو</td>
+                                              <td>1399/01/22</td>
+                                              <td>15،000،000</td>
+                                              <td><span class="badge bg-rgba-danger text-danger">مسدود شده</span></td>
+                                              <td><a href="/portal/view_online_class"><i class="bx bx-cart-alt"></i></a></td>
+                                          </tr>
+                                          <tr>
+                                              <td>10</td>
+                                              <td><a href="/portal/view_online_class">دوره آموزشی نقشه ذهنی ( Mind Map - مایند مپ)</a></td>
+                                              <td>شاهین شاکری</td>
+                                              <td>حدود 110 دقيقه فایل ویدئویی</td>
+                                              <td>1399/01/23</td>
+                                              <td>30،000،000</td>
+                                              <td><span class="badge bg-rgba-success text-success">فعال</span></td>
+                                              <td><a href="/portal/view_online_class"><i class="bx bx-cart-alt"></i></a></td>
+                                          </tr>
+                                          <tr>
+                                              <td>11</td>
+                                              <td><a href="/portal/view_online_class">دوره آموزشی در جستجوی شادی (راهکارهای علمی برای شادی بیشتر)</a></td>
+                                              <td>شاهین شاکری</td>
+                                              <td>بیش 136 دقيقه فایل ویدئویی</td>
+                                              <td>1399/01/21</td>
+                                              <td>20،000000</td>
+                                              <td><span class="badge bg-rgba-danger text-danger">مسدود شده</span></td>
+                                              <td><a href="/portal/view_online_class"><i class="bx bx-cart-alt"></i></a></td>
+                                          </tr>
+                                          <tr>
+                                              <td>12</td>
+                                              <td><a href="/portal/view_online_class">دوره آموزشی ارتباطات موثر و حرفه ای در محیط کار</a></td>
+                                              <td>مجتبی شیخ علی</td>
+                                              <td>بیش از 110 دقیقه فایل صوتی</td>
+                                              <td>1399/01/20</td>
+                                              <td>28،000،000</td>
+                                              <td><span class="badge bg-rgba-danger text-danger">مسدود شده</span></td>
+                                              <td><a href="/portal/view_online_class"><i class="bx bx-cart-alt"></i></a></td>
+                                          </tr>
+                                      </tbody>
+                                  </table>
+                              </div>
+                              <!-- datatable ends -->
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </section>
+          <!-- users list ends -->
+        </div>
+      </div>
+    </div>
+    <!-- END: Content-->

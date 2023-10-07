@@ -1,0 +1,107 @@
+//---------------------------------------------
+//
+//  Utilities
+//
+//    1. Colors
+//    2. Text Colors
+//    3. Background Colors
+//    4. Margin
+//
+//---------------------------------------------
+
+//---------------------------------------------
+// 1. Colors
+//---------------------------------------------
+
+$custom-colors: (
+  "c6"     :   #c6c6c6,
+  "fa"     :   #fafafa,
+  "9f"     :   #9f9f9f,
+  "d9"     :   #d9d9d9,
+  "ae"     :   #aeaeae,
+  "cb"     :   #cbcbcb,
+  "lp"     :   #CCD9ED,
+  "ls"     :   #01a6854f,
+  "footer" :   #050030,
+  "db"     :   #040A41,
+  "lb"     :   #4691FC,
+  "dg"     :   #04193D,
+  "lg"     :   #01A686,
+  "dp"     :   #3962D1,
+  "84"     :   #848484,
+  "41"     :   #414141,
+  "f8"     :   #F8F8F8,
+  "0D"     :   #0D216D,
+  "70"     :   #707070,
+);
+$theme-colors: map-merge( $custom-colors ,$theme-colors );
+
+//---------------------------------------------
+// 1. Text Colors
+//---------------------------------------------
+
+$utilities: map-merge(
+  $utilities,
+  (
+    "color": (
+        property: color,
+        class: text,
+        values: map-merge(
+          $theme-colors,
+          $custom-colors,
+        )
+    ),  
+  )
+);
+
+//---------------------------------------------
+// 3. Background Colors
+//---------------------------------------------
+
+$utilities: map-merge(
+  $utilities,
+  (
+    "background-color": (
+      property: background-color,
+      class: bg,
+      values: map-merge(
+        $theme-colors,
+        $custom-colors,
+      )
+    ),
+  )
+);
+
+//---------------------------------------------
+// 3. Margin
+//---------------------------------------------
+
+$utilities: map-merge(
+  $utilities,
+  (
+    "margin-bottom": map-merge(
+      map-get($utilities, "margin-bottom"),
+      (
+        values: map-merge(
+          map-get(map-get($utilities, "margin-bottom"), "values"),
+          (6: 9rem, 7: 12rem, 8: 15rem),
+        ),
+      ),
+    ),
+  )
+);
+
+$utilities: map-merge(
+  $utilities,
+  (
+    "padding": map-merge(
+      map-get($utilities, "padding"),
+      (
+        values: map-merge(
+          map-get(map-get($utilities, "padding"), "values"),
+          (6: 3.75rem),
+        ),
+      ),
+    ),
+  )
+);

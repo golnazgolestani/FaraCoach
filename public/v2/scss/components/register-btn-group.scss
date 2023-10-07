@@ -1,0 +1,39 @@
+//---------------------------------------------
+//
+//  Register Button Group Component
+//
+//    1. Imports
+//    2. Component
+//
+//---------------------------------------------
+
+//---------------------------------------------
+// 1. Imports
+//---------------------------------------------
+
+@import "../variables";
+
+//---------------------------------------------
+// 2. Component
+//---------------------------------------------
+
+.register-btn-group {
+
+    position: relative;
+    min-width: 160px;
+    height: 40px;
+
+    .btn {
+        position: absolute;
+        min-width: 86px;
+        padding: 7px 10px;
+        border-radius: 10px;
+        &.active {
+            background: $primary !important;
+            border-color: $primary !important;
+            color: $light !important;
+            z-index: 1;
+            transition: none;
+        }
+    }
+}

@@ -1,0 +1,108 @@
+title = "ویرایش ایده"
+url = "/portal/edit_idea"
+layout = "panel"
+description = "ویرایش ایده"
+is_hidden = 0
+
+[session]
+security = "user"
+redirect = "signin"
+==
+<!-- BEGIN: Content-->
+    <div class="app-content content">
+      <div class="content-overlay"></div>
+      <div class="content-wrapper">
+        <div class="content-header row">
+            <div class="content-header-left col-12 mb-2 mt-1">
+                <div class="row breadcrumbs-top">
+                    <div class="col-12">
+                        <h5 class="content-header-title float-left pr-1">ویرایش ایده</h5>
+                        <div class="breadcrumb-wrapper">
+                            <ol class="breadcrumb p-0 mb-0">
+                                <li class="breadcrumb-item"><a href="/portal"><i class="bx bx-home-alt"></i></a></li>
+                                <li class="breadcrumb-item active"> ویرایش ایده</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-body"><!-- users edit start -->
+          <section class="users-edit">
+              <div class="card">
+                  <div class="card-content">
+                      <div class="card-body">
+                          <ul class="nav nav-tabs mb-2" role="tablist">
+                              <li class="nav-item">
+                                  <a class="nav-link d-flex align-items-center active" id="account-tab" data-toggle="tab" href="#account" aria-controls="account" role="tab" aria-selected="true">
+                                      <i class="bx bx-analyse mr-25"></i><span class="d-none d-sm-block">عنوان ایده: مشاوره اینترنتی</span>
+                                  </a>
+                              </li>
+                          </ul>
+                          <div class="tab-content">
+                              <div class="tab-pane active fade show" id="account" aria-labelledby="account-tab" role="tabpanel">
+                                  <!-- users edit media object start -->
+                                  <div class="media mb-2">
+                                      <a class="mr-2" href="#">
+                                          <img src="{{ 'panel_assets/images/portrait/small/avatar-s-11.jpg'|theme }}" alt="users avatar" class="users-avatar-shadow rounded-circle" height="64" width="64">
+                                      </a>
+                                      <div class="media-body">
+                                          <h4 class="media-heading">{{ user.name }}</h4>
+                                      </div>
+                                  </div>
+                                  <!-- users edit media object ends -->
+                                  <!-- users edit account form start -->
+                                  <form novalidate>
+                                      <div class="row">
+                                          <div class="col-12 col-sm-6">
+                                              <div class="form-group">
+                                                  <div class="controls">
+                                                      <label>عنوان ایده</label>
+                                                      <input type="text" class="form-control text-left" placeholder="عنوان ایده" value="مشاوره اینترنتی" required data-validation-required-message="وارد کردن عنوان ایده الزامی است" dir="ltr">
+                                                  </div>
+                                              </div>
+                                              <div class="form-group">
+                                                  <div class="controls">
+                                                      <label>توضیح خلاصه</label>
+                                                      <input type="text" class="form-control" placeholder="توضیح خلاصه" value="کسب درآمد از اینترنت با مشاوره پزشکی اینترنتی" required data-validation-required-message="وارد کردن توضیح خلاصه الزامی است">
+                                                  </div>
+                                              </div>
+                                              <div class="form-group">
+                                                  <div class="controls">
+                                                      <label>قیمت (ريال)</label>
+                                                      <input type="text" class="form-control text-left" placeholder="قیمت" value="15،000،000" required data-validation-required-message="وارد کردن قیمت الزامی است" dir="ltr">
+                                                  </div>
+                                              </div>
+                                          </div>
+                                          <div class="col-12 col-sm-6">
+                                              <div class="form-group">
+                                                  <label>وضعیت</label>
+                                                  <select class="form-control">
+                                                      <option>فعال</option>
+                                                      <option>مسدود شده</option>
+                                                      <option>بستن</option>
+                                                  </select>
+                                              </div>
+                                              <div class="form-group">
+                                                  <label>توضیحات کامل</label>
+                                                  <textarea rows="4" class="form-control">کسب درآمد از اینترنت با مشاوره. در زمینه‌ای تخصص دارید؟ اگر جواب‌تان مثبت است پس می‌توانید از این ایده برای راه اندازی کسب و کار با سرمایه کم کسب درآمد کنید. در سایت‌های مربوط به یافتن مشاور (مانند الو مشاور) ثبت نام کنید و برای کسانی که با شما تماس می‌گیرند تا با شما صحبت کنند نرخ تماس دقیقه‌ای خود را مشخص کنید.</textarea>
+                                              </div>
+                                          </div>
+                                          <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
+                                              <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1">ذخیره تغییرات</button>
+                                              <button type="reset" class="btn btn-light">انصراف</button>
+                                          </div>
+                                      </div>
+                                  </form>
+                                  <!-- users edit account form ends -->
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </section>
+          <!-- users edit ends -->
+        </div>
+      </div>
+    </div>
+    <!-- END: Content-->

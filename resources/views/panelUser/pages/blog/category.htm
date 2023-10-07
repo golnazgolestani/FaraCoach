@@ -1,0 +1,124 @@
+title = "بلاگ / دسته بندی"
+url = "/blog/category/:slug/:page?"
+layout = "simple"
+is_hidden = 0
+
+[blogPosts]
+pageNumber = "{{ :page }}"
+categoryFilter = "{{ :slug }}"
+postsPerPage = 10
+noPostsMessage = "No posts found"
+sortOrder = "published_at desc"
+categoryPage = "blog/category"
+postPage = "blog/post"
+
+[blogCategories]
+slug = "{{ :slug }}"
+displayEmpty = 1
+categoryPage = "blog/category"
+==
+<?php
+use \RainLab\Blog\Models\Category;
+use \RainLab\Blog\Models\Post;
+
+function onStart(){
+	/*$this['categories'] = Category::get();*/
+	$this['LatestPosts'] = Post::orderBy('published_at', 'desc')->take(5)->get();
+}
+?>
+==
+<!-- BEGIN: Vendor CSS-->
+    <link rel="stylesheet" type="text/css" href="/themes/acckt/panel_assets/vendors/css/vendors.min.css">
+<!-- END: Vendor CSS-->
+{% set posts = blogPosts.posts %}
+
+<!-- Start Page Title -->
+<div class="page-title-area mt-5">
+     <div class="container">
+         <h2>لیست مطالب وبلاگ</h2>
+    </div>
+</div>
+<!-- End Page Title -->
+
+<!-- Start Blog Area -->
+<section class="blog-area ptb-80 mt-5">
+    <div class="container">
+        <div class="row">
+        <div class="col-lg-4 col-md-12">
+                <aside class="widget-area" id="secondary">
+                    {% partial 'site/post_search' %}
+
+                    {#% partial 'site/latest_posts' %#}
+
+                    {% partial 'site/post_categories' %}
+
+                    {% partial 'site/post_archive' %}
+
+                    {% partial 'site/post_tags' %}
+
+                </aside>
+            </div>
+            <div class="col-lg-8 col-md-12">
+                <div class="row">
+                    {% for post in posts %}
+                    <div class="col-lg-6 col-md-6 mb-5">
+                        <div class="single-blog-post">
+                            <div class="blog-image">
+                                <a href="{{ post.url }}">
+                                    {% if post.featured_images.count %}
+                                        {% for image in post.featured_images|slice(0, 1) %}
+                                        <img src="{{ image.path }}" alt="{{ image.description != null ? image.description : image.filename }}" title="{{ image.title != null ? image.title : post.title }}">
+                                        {% endfor %}
+                                    {% else %}
+                                        <img src="{{ 'assets/img/blog-image/1.jpg'|theme }}" alt="image">
+                                    {% endif %}
+                                </a>
+
+                                <div class="date mt-3 mb-2">
+                                    <i data-feather="calendar"></i> {{ post.published_at|date('j F Y') }}
+                                </div>
+                            </div>
+
+                            <div class="blog-post-content">
+                                <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
+
+                                <span>توسط <a href="#">{{ post.user.first_name }} {{ post.user.last_name }}</a></span>
+
+                                <p>{{ post.summary  }}</p>
+
+                                <a href="{{ post.url }}" class="read-more-btn">ادامه خواندن <i data-feather="arrow-left"></i> </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <!--<p>هیچ مقاله ای وجود ندراد</p>-->
+                    {% endfor %}
+
+                    {% if posts.lastPage > 1 %}
+                    <div class="col-lg-12 col-md-12">
+                        <div class="pagination-area">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination justify-content-center">
+                                    {% if posts.currentPage > 1 %}
+                                    <li class="page-item"><a class="page-link" href="{{ this.page.baseFileName | page({ (__SELF__.pageParam): (posts.currentPage-1) }) }}">قبلی</a></li>
+                                    {% endif %}
+
+                                    {% for page in 1..posts.lastPage %}
+                                    <li class="page-item {{ posts.currentPage == page ? 'active' : null }}"><a class="page-link" href="{{ this.page.baseFileName | page({ (__SELF__.pageParam): page }) }}">{{ page }}</a></li>
+                                    {% endfor %}
+
+                                    {% if posts.lastPage > posts.currentPage %}
+                                    <li class="page-item"><a class="page-link" href="{{ this.page.baseFileName | page({ (__SELF__.pageParam): (posts.currentPage+1) }) }}">بعدی</a></li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Blog Area -->

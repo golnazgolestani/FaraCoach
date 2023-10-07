@@ -1,0 +1,266 @@
+description = "قالب پورتال - فرم"
+
+[session]
+security = "user"
+redirect = "signin"
+==
+<!DOCTYPE html>
+<html class="loading" lang="fa" data-textdirection="rtl" dir="rtl">
+  <!-- BEGIN: Head-->
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>شتابدهنده اندیشه خوارزم</title>
+    <link rel="shortcut icon" type="image/x-icon" href="{{ 'assets/img/favicon.ico'|theme }}">
+	<meta name="theme-color" content="#5A8DEE">
+    
+    <!-- BEGIN: Vendor CSS-->
+    <link rel="stylesheet" type="text/css" href="{{ 'panel_assets/vendors/css/vendors.min.css'|theme }}">
+    <link rel="stylesheet" type="text/css" href="{{ 'panel_assets/vendors/css/extensions/swiper.min.css'|theme }}">
+    <link rel="stylesheet" type="text/css" href="{{ 'panel_assets/vendors/css/forms/select/select2.min.css'|theme }}">
+    <link rel="stylesheet" type="text/css" href="{{ 'panel_assets/vendors/css/pickers/datepicker-jalali/bootstrap-datepicker.min.css'|theme }}">
+    <!-- END: Vendor CSS-->
+
+    <!-- BEGIN: Theme CSS-->
+    <link rel="stylesheet" type="text/css" href="{{ 'panel_assets/css/bootstrap.min.css'|theme }}">
+    <link rel="stylesheet" type="text/css" href="{{ 'panel_assets/css/bootstrap-extended.css'|theme }}">
+    <link rel="stylesheet" type="text/css" href="{{ 'panel_assets/css/colors.css'|theme }}">
+    <link rel="stylesheet" type="text/css" href="{{ 'panel_assets/css/components.css'|theme }}">
+    <link rel="stylesheet" type="text/css" href="{{ 'panel_assets/css/themes/dark-layout.css'|theme }}">
+    <link rel="stylesheet" type="text/css" href="{{ 'panel_assets/css/themes/semi-dark-layout.css'|theme }}">
+    <!-- END: Theme CSS-->
+
+    <!-- BEGIN: Page CSS-->
+    <link rel="stylesheet" type="text/css" href="{{ 'panel_assets/css/core/menu/menu-types/vertical-menu.css'|theme }}">
+    <link rel="stylesheet" type="text/css" href="{{ 'panel_assets/css/plugins/forms/validation/form-validation.css'|theme }}">
+    <link rel="stylesheet" type="text/css" href="{{ 'panel_assets/css/plugins/extensions/swiper.css'|theme }}">
+    <link rel="stylesheet" type="text/css" href="{{ 'panel_assets/vendors/css/extensions/sweetalert2.min.css'|theme }}">
+    <link rel="stylesheet" type="text/css" href="{{ 'panel_assets/css/pages/faq.css'|theme }}">
+    <link rel="stylesheet" type="text/css" href="{{ 'panel_assets/css/core/menu/menu-types/horizontal-menu.css'|theme }}">
+    <link rel="stylesheet" type="text/css" href="{{ 'panel_assets/css/pages/authentication.css'|theme }}">
+    <link rel="stylesheet" type="text/css" href="{{ 'panel_assets/css/plugins/forms/wizard.css'|theme }}">
+    <link rel="stylesheet" type="text/css" href="{{ 'panel_assets/css/pages/app-email.css'|theme }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lalezar">
+    <!-- END: Page CSS-->
+    <!--{% framework extras %}-->
+    <link rel="stylesheet" property="stylesheet" href="/modules/system/assets/css/framework.extras.css">
+
+    <style>
+      .main-menu.menu-dark .navigation li a {
+        color: #fff;
+      }
+
+      .main-menu.menu-dark {
+        background: #153a64 !important;
+      }
+
+      .main-menu.menu-dark .navigation {
+        background: #153a64 !important;
+      }
+
+      .main-menu.menu-dark .navigation > li.nav-item.open.has-sub.open{
+        background-color: #153a64 !important;
+      }
+
+      .main-menu.menu-dark .navigation > li > ul > li:first-child > a.disabled {
+        color: #7b889d;
+      }
+
+      .main-menu .navbar-header {
+        padding: 0.85rem 1.3rem 0.3rem 1.45rem !important;
+      }
+    </style>
+    {% styles %}
+  </head>
+  <!-- END: Head-->
+
+  <!-- BEGIN: Body-->
+  <!--<body class="vertical-layout vertical-menu-modern dark-layout 2-columns  navbar-sticky footer-static  " data-open="click" data-menu="vertical-menu-modern" data-col="2-columns" data-layout="dark-layout">-->
+  <body class="vertical-layout vertical-menu-modern 2-columns  navbar-sticky footer-static  " data-open="click" data-menu="vertical-menu-modern" data-col="2-columns">
+
+  {% partial 'panel/header_menu' %}
+
+  {% partial 'panel/right_menu' %}
+
+  <!-- BEGIN: Content-->
+
+  <div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="content-wrapper">
+      <div class="content-header row">
+        <div class="content-header-left col-12 mb-2 mt-1">
+          <div class="row breadcrumbs-top">
+            <div class="col-12">
+              <h5 class="content-header-title float-left pr-1">تنظیمات حساب کاربری</h5>
+              <div class="breadcrumb-wrapper">
+                <ol class="breadcrumb p-0 mb-0">
+                  <li class="breadcrumb-item"><a href="/portal"><i class="bx bx-home-alt"></i></a></li>
+                  <li class="breadcrumb-item"> تنظیمات حساب کاربری</li>
+                  <li class="breadcrumb-item active">اطلاعات عمومی</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="content-body">
+        <section id="page-account-settings">
+          <div class="row">
+            <div class="col-12">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="card">
+                    <div class="card-content">
+                      <div class="card-body">
+                      {% page %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- account setting page ends -->
+      </div>
+    </div>
+  </div>
+  <!-- END: Content-->
+
+    <!-- widget chat demo ends -->
+
+    </div>
+
+    <!-- BEGIN: Customizer-->
+    <div class="customizer d-none d-md-block"><a class="customizer-close" href="#"><i class="bx bx-x"></i></a><a class="customizer-toggle" href="#"><i class="bx bx-cog bx bx-spin white"></i></a><div class="customizer-content p-2">
+      <h4 class="text-uppercase mb-0 mt-n50">سفارشی سازی قالب</h4>
+      <!--<small>سفارشی سازی کنید و به صورت زنده مشاهده کنید.</small>-->
+      <hr>
+      <!-- Theme options starts -->
+      <h5 class="mt-n25">طرح قالب</h5>
+      <div class="theme-layouts">
+        <div class="d-flex justify-content-start">
+          <div class="mx-50">
+            <fieldset>
+              <div class="radio">
+                <input type="radio" name="layoutOptions" value="false" id="radio-light" class="layout-name" data-layout="" checked>
+                <label for="radio-light">روشن</label>
+              </div>
+            </fieldset>
+          </div>
+          <div class="mx-50">
+            <fieldset>
+              <div class="radio">
+                <input type="radio" name="layoutOptions" value="false" id="radio-dark" class="layout-name" data-layout="dark-layout">
+                <label for="radio-dark">تیره</label>
+              </div>
+            </fieldset>
+          </div>
+          <div class="mx-50">
+            <fieldset>
+              <div class="radio">
+                <input type="radio" name="layoutOptions" value="false" id="radio-semi-dark" class="layout-name" data-layout="semi-dark-layout">
+                <label for="radio-semi-dark">نیمه تیره</label>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+      <!-- Theme options starts -->
+      <hr>
+
+      <!-- Menu Colors Starts -->
+      <div id="customizer-theme-colors">
+        <h5>رنگ های فهرست</h5>
+        <ul class="list-inline unstyled-list">
+          <li class="color-box bg-primary selected" data-color="theme-primary"> </li>
+          <li class="color-box bg-success" data-color="theme-success"> </li>
+          <li class="color-box bg-danger" data-color="theme-danger"> </li>
+          <li class="color-box bg-info" data-color="theme-info"> </li>
+          <li class="color-box bg-warning" data-color="theme-warning"> </li>
+          <li class="color-box bg-dark" data-color="theme-dark"> </li>
+        </ul>
+        <hr>
+      </div>
+      <!-- Navbar colors starts -->
+      <div id="customizer-navbar-colors">
+        <h5>رنگ های نوار بالایی</h5>
+        <ul class="list-inline unstyled-list">
+          <li class="color-box bg-white border selected" data-navbar-default=""> </li>
+          <li class="color-box bg-primary" data-navbar-color="bg-primary"> </li>
+          <li class="color-box bg-success" data-navbar-color="bg-success"> </li>
+          <li class="color-box bg-danger" data-navbar-color="bg-danger"> </li>
+          <li class="color-box bg-info" data-navbar-color="bg-info"> </li>
+          <li class="color-box bg-warning" data-navbar-color="bg-warning"> </li>
+          <li class="color-box bg-dark" data-navbar-color="bg-dark"> </li>
+        </ul>
+        <hr>
+      </div>
+      <!-- Navbar colors starts -->
+
+    </div>
+    </div>
+    <!-- End: Customizer-->
+
+    <div class="sidenav-overlay"></div>
+    <div class="drag-target"></div>
+
+    {% partial 'panel/footer_menu' %}
+
+
+    <!-- BEGIN: Vendor JS-->
+  <script src="{{ 'assets/js/jquery.min.js'|theme }}"></script>
+  <script src="{{ 'panel_assets/vendors/js/vendors.min.js'|theme }}"></script>
+
+    <script src="{{ 'panel_assets/fonts/LivIconsEvo/js/LivIconsEvo.tools.min.js'|theme }}"></script>
+    <script src="{{ 'panel_assets/fonts/LivIconsEvo/js/LivIconsEvo.defaults.js'|theme }}"></script>
+    <script src="{{ 'panel_assets/fonts/LivIconsEvo/js/LivIconsEvo.min.js'|theme }}"></script>
+    <!-- BEGIN Vendor JS-->
+
+    <!-- BEGIN: Page Vendor JS-->
+    <script src="{{ 'panel_assets/vendors/js/extensions/swiper.min.js'|theme }}"></script>
+    <script src="{{ 'panel_assets/vendors/js/forms/select/select2.full.min.js'|theme }}"></script>
+    <script src="{{ 'panel_assets/vendors/js/forms/validation/jqBootstrapValidation.js'|theme }}"></script>
+    <script src="{{ 'panel_assets/vendors/js/pickers/datepicker-jalali/bootstrap-datepicker.min.js'|theme }}"></script>
+    <script src="{{ 'panel_assets/vendors/js/pickers/datepicker-jalali/bootstrap-datepicker.fa.min.js'|theme }}"></script>
+    <script src="{{ 'panel_assets/vendors/js/extensions/dropzone.min.js'|theme }}"></script>
+    <script src="{{ 'panel_assets/vendors/js/forms/repeater/jquery.repeater.min.js'|theme }}"></script>
+    <!-- END: Page Vendor JS-->
+
+    <!-- BEGIN: Theme JS-->
+    <script src="{{ 'panel_assets/js/scripts/configs/vertical-menu-dark.js'|theme }}"></script>
+    <script src="{{ 'panel_assets/js/core/app-menu.js'|theme }}"></script>
+    <script src="{{ 'panel_assets/js/core/app.js'|theme }}"></script>
+    <script src="{{ 'panel_assets/js/scripts/components.js'|theme }}"></script>
+    <script src="{{ 'panel_assets/js/scripts/footer.js'|theme }}"></script>
+    <script src="{{ 'panel_assets/js/scripts/customizer.js'|theme }}"></script>
+    <script src="{{ 'panel_assets/vendors/js/extensions/jquery.steps.js'|theme }}"></script>
+    <script src="{{ 'panel_assets/vendors/js/extensions/sweetalert2.all.min.js'|theme }}"></script>
+    <script src="{{ 'panel_assets/vendors/js/forms/validation/jquery.validate.min.js'|theme }}"></script>
+    <!-- END: Theme JS-->
+
+    <!-- BEGIN: Page JS-->
+    <script src="{{ 'panel_assets/js/scripts/pages/page-account-settings.js'|theme }}"></script>
+    <script src="{{ 'panel_assets/js/scripts/forms/form-repeater.js'|theme }}"></script>
+    <script src="{{ 'panel_assets/js/scripts/forms/wizard-steps.js'|theme }}"></script>
+    <script src="{{ 'panel_assets/js/scripts/forms/validation/form-validation.js'|theme }}"></script>
+    <script src="{{ 'panel_assets/js/scripts/pages/faq.js'|theme }}"></script>
+    <script src="{{ 'panel_assets/js/scripts/pages/app-email.js'|theme }}"></script>
+    <!-- END: Page JS-->
+
+    <script src="/modules/system/assets/js/framework.js" defer></script>
+    <script src="/modules/system/assets/js/framework.extras.js" defer></script>
+
+    {% scripts %}
+
+    {% flash %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            $.oc.flashMsg({text: '{{ message }}', 'class': '{{ type }}', 'interval': 10})
+        }, false);
+    </script>
+    {% endflash %}
+  </body>
+  <!-- END: Body-->
+</html>

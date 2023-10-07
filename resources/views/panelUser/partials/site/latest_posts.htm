@@ -1,0 +1,22 @@
+<section class="widget widget_startp_posts_thumb">
+    <h3 class="widget-title">آخرین پست ها</h3>
+
+    {% for latest_post in LatestPosts %}
+    <article class="item">
+        <a href="/blog/post/{{ latest_post.slug }}" class="thumb">
+            {% if latest_post.featured_images.count %}
+            {% for image in latest_post.featured_images|slice(0, 1) %}
+            <span class="fullimage cover" role="img"><img class="img-fluid" src="{{ image.path }}" alt="{{ image.description != null ? image.description : image.filename }}"></span>
+            {% endfor %}
+            {% endif %}
+        </a>
+        <div class="info">
+            <time datetime="2019-06-30">{{ latest_post.published_at|date('j F Y') }}</time>
+            <h4 class="title usmall"><a href="/blog/post/{{ latest_post.slug }}">{{ latest_post.title }}</a></h4>
+        </div>
+
+        <div class="clear"></div>
+    </article>
+    {% endfor %}
+
+</section>

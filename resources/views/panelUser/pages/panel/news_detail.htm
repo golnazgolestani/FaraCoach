@@ -1,0 +1,87 @@
+title = "اخبار - جزئیات خبر"
+url = "/portal/news/detail/:slug"
+layout = "panel"
+description = "اخبار - جزئیات خبر"
+is_hidden = 0
+
+[session]
+security = "user"
+redirect = "signin"
+
+[blogPost]
+slug = "{{ :slug }}"
+categoryPage = "blog/category"
+==
+{% set post = blogPost.post %}
+
+<!-- BEGIN: Content-->
+<div class="app-content content">
+  <div class="content-overlay"></div>
+  <div class="content-wrapper">
+    <div class="content-header row">
+      <div class="content-header-left col-12 mb-2 mt-1">
+        <div class="row breadcrumbs-top">
+          <div class="col-12">
+            <h5 class="content-header-title float-left pr-1">اخبار - {{ post.title }}</h5>
+            <div class="breadcrumb-wrapper">
+              <ol class="breadcrumb p-0 mb-0">
+                <li class="breadcrumb-item"><a href="/portal"><i class="bx bx-home-alt"></i></a></li>
+                <li class="breadcrumb-item active">اخبار - {{ post.title }}</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content-body"><!-- Knowledge base question Content start -->
+      <section class="kb-question">
+        <div class="row">
+          <div class="col-md-12">
+            <button class="btn btn-primary mb-1 kb-menu d-md-none"><i class="bx bx-menu mr-50"></i>سوالات</button>
+            <div class="card">
+              <div class="card-content">
+                <div class="card-body">
+                  <div class="title mb-2">
+                    <h2 class="kb-title">{{ post.title }}</h2>
+                    <p>منتشر شده در {{ post.published_at|date('j F Y') }}</p>
+                  </div>
+                  {% if post.featured_images.count %}
+                  <div id="kb-carousel" class="carousel slide my-2" data-ride="carousel" data-touch="false">
+                    <ol class="carousel-indicators">
+                      {% for image in post.featured_images %}
+                      <li data-target="#kb-carousel" data-slide-to="{{ loop.index0 }}" class="{% if loop.index == 1 %}active{% endif %}"> </li>
+                      {% endfor %}
+                    </ol>
+                    <div class="carousel-inner" role="listbox">
+                      {% for image in post.featured_images %}
+                      <div class="carousel-item {% if loop.index == 1 %}active{% endif %}">
+                        <img class="img-fluid" src="{{ image.path }}" alt="banner">
+                      </div>
+                      {% endfor %}
+                    </div>
+                    <a class="carousel-control-prev" href="#kb-carousel" role="button" data-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="sr-only">قبلی</span>
+                    </a>
+                    <a class="carousel-control-next" href="#kb-carousel" role="button" data-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="sr-only">بعدی</span>
+                    </a>
+                  </div>
+                  {% endif %}
+                  <p>{{ post.content_html | raw }}</p>
+                  <div class="d-flex justify-content-between mt-2">
+                    <a href="javascript:void(0)" class="btn btn-light-primary">قبلی</a>
+                    <a href="javascript:void(0)" class="btn btn-light-primary">بعدی</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Knowledge base question Content ends -->
+    </div>
+  </div>
+</div>
+<!-- END: Content-->

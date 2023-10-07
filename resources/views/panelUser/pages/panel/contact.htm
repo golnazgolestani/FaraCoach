@@ -1,0 +1,117 @@
+title = "تماس با ما - انتقادات و پیشنهادات"
+url = "/portal/contact"
+layout = "panel"
+description = "تماس با ما - انتقادات و پیشنهادات"
+is_hidden = 0
+
+[session]
+security = "user"
+redirect = "signin"
+==
+<?php
+use \rahmanmahdi\kharazm\models\Contact;
+
+function onStart()
+{
+  $user = Auth::getUser();
+}
+
+function onSave()
+{
+  $user = Auth::getUser();
+
+  $contact = new Contact();
+
+  $contact->user_id = $user->id;
+  $contact->description = post('description');
+  $contact->save();
+
+  return Redirect::to('/portal/contact');
+}
+?>
+==
+<!-- BEGIN: Content-->
+<div class="app-content content">
+  <div class="content-overlay"></div>
+  <div class="content-wrapper">
+    <div class="content-header row">
+      <div class="content-header-left col-12 mb-2 mt-1">
+        <div class="row breadcrumbs-top">
+          <div class="col-12">
+            <h5 class="content-header-title float-left pr-1">انتقادات و پیشنهادات</h5>
+            <div class="breadcrumb-wrapper">
+              <ol class="breadcrumb p-0 mb-0">
+                <li class="breadcrumb-item"><a href="/portal"><i class="bx bx-home-alt"></i></a></li>
+                <li class="breadcrumb-item"> تماس با ما</li>
+                <li class="breadcrumb-item active">انتقادات و پیشنهادات</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content-body"><!-- account setting page start -->
+      <section id="page-account-settings">
+        <div class="row">
+          <div class="col-12">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-content">
+                    <div class="card-body">
+                      <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="account-vertical-general" aria-labelledby="account-pill-general" aria-expanded="true">
+                          <form method="POST" action="{{ url('portal/contact') }}" enctype="multipart/form-data">
+                            <input type="hidden" name="_handler" value="onSave">
+                            {{ form_token() }}
+                            {{ form_sessionKey() }}
+                            <div class="row">
+                              <div class="col-4">
+                                <div class="form-group">
+                                  <div class="controls">
+                                    <label>نام و نام خانوادگی</label>
+                                    <input type="text" id="name" name="name" class="form-control text-left" required placeholder="نام و نام خانوادگی" value="{{ user.name }}" dir="ltr" readonly>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-4">
+                                <div class="form-group">
+                                  <label>ایمیل</label>
+                                  <input type="text" id="email" name="email" class="form-control text-left" placeholder="ایمیل" value="{{ user.email }}" dir="ltr" readonly>
+                                </div>
+                              </div>
+                              <div class="col-4">
+                                <div class="form-group">
+                                  <div class="controls">
+                                    <label>شماره تماس</label>
+                                    <input type="text" id="username" name="username" class="form-control" placeholder="شماره تماس" value="{{ user.username }}" required data-validation-required-message="وارد کردن شماره تماس الزامی است" readonly>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-12">
+                                <div class="form-group">
+                                  <label>متن پیام، انتقاد یا پیشنهاد</label>
+                                  <textarea class="form-control" id="description" name="description" required rows="3" placeholder="توضیح خود را وارد کنید ..."></textarea>
+                                </div>
+                              </div>
+                              <div class="col-12 d-flex flex-sm-row flex-column justify-content-end">
+                                <button type="submit" class="btn btn-primary glow mr-sm-1 mb-1">ثبت نظر</button>
+                                <button type="reset" class="btn btn-light mb-1">انصراف</button>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- account setting page ends -->
+    </div>
+  </div>
+</div>
+<!-- END: Content-->

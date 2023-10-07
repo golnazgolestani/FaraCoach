@@ -1,0 +1,46 @@
+.tab-info {
+
+    .tabs {
+        padding: 0;
+        list-style: none;
+        position: relative;
+        border-bottom: 1px solid #ededed;
+        display: flex;
+        overflow-x: scroll;
+        
+          .active-tab {
+              position: relative;
+              color: black;
+          
+              &:after {
+                  width: 100%;
+                  height: 2px;
+                  position: absolute;
+                  content: "";
+                  bottom: -2px;
+                  left: 0;
+                  background: #01A686;
+              }
+          }
+        
+          li {
+              display: inline-block;
+              cursor: pointer;
+              color: #aeaeae;
+              padding-bottom: 15px;
+              margin-left: 62px;
+              min-width: 90px;
+          }
+      }
+      
+      .tabs-content {
+          margin-top: 50px;
+          padding: 0;
+          list-style: none;
+          
+          li {
+              display: none;
+              line-height: 50px;
+          }
+      }
+}

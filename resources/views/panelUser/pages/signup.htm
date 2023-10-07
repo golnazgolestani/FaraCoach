@@ -1,0 +1,334 @@
+title = "ثبت نام"
+url = "/signup"
+description = "ثبت نام"
+is_hidden = 0
+
+[account]
+redirect = "/portal"
+paramCode = "code"
+forceSecure = 0
+requirePassword = 0
+==
+<?php
+use acckt\kharazm\models\ActivationCode;
+
+use RainLab\User\Facades\Auth;
+
+
+
+function onStart()
+
+{
+
+    $this['activation_code'] = ActivationCode::where('mobile', post('mobile'))->where('code', post('validation_code'))->first();
+
+    if($this['activation_code'])
+
+    {
+
+         $this['mobile'] = $this['activation_code']->mobile;
+
+         $this['validation_code'] = $this['activation_code']->code;
+
+    }
+
+    else
+
+    {
+
+        Flash::error('شماره همراه و کد فعالسازی هماهنگ نیست');
+
+        return Redirect::to('/verify?mobile=' . post('mobile'));
+
+    }
+
+}
+
+
+
+function onSubmitForm()
+
+{
+
+    date_default_timezone_set("Asia/Tehran");
+
+    $this['activation_code'] = ActivationCode::select('mobile')->where('mobile', post('username'))->where('code', post('validation_code'))->first();
+
+    if($this['activation_code'])
+
+    {
+
+        $mobile = $this['activation_code']->mobile;
+
+        ActivationCode::where('mobile', $mobile)->delete();
+
+
+
+        $this->account->onRegister();
+
+        return Redirect::to('/home');
+
+    }
+
+    else
+
+    {
+
+        Flash::error('شماره همراه و کد فعالسازی هماهنگ نیست');
+
+        return Redirect::to('/verify?mobile=' . post('username'));
+
+    }
+
+}
+?>
+==
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <title>شتابدهنده اندیشه خوارزم</title>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" type="image/png" href="{{ 'assets/img/favicon.ico'|theme }}"/>
+
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/vendor/bootstrap/css/bootstrap.min.css'|theme }}">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lalezar">
+
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css'|theme }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/fonts/iconic/css/material-design-iconic-font.min.css'|theme }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/vendor/animate/animate.css'|theme }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/vendor/css-hamburgers/hamburgers.min.css'|theme }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/vendor/animsition/css/animsition.min.css'|theme }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/vendor/select2/select2.min.css'|theme }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/vendor/daterangepicker/daterangepicker.css'|theme }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/css/util.css'|theme }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ 'assets/css/main.css'|theme }}">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lalezar">
+
+    <style>
+
+    .container-login100 {
+
+      direction: rtl;
+
+    }
+
+    .container-login100 .input100 {
+
+      padding:0 25px 0 10px;
+
+    }
+
+    .container-login100 .label-checkbox100::before {
+
+      right:0;
+
+      left:auto;
+
+    }
+
+    .container-login100 .label-checkbox100 {
+
+      padding-right: 25px;
+
+    }
+
+    .alert-validate::after,
+
+    .alert-validate::before {
+
+      left:0 !important;
+
+      right:auto !important;
+
+      text-align: right !important;
+
+    }
+
+    .alert-validate::before {
+
+      padding: 4px 10px 4px 25px !important;
+
+    }
+
+    .alert-validate::after {
+
+      padding-left:10px;
+
+    }
+
+    </style>
+
+    <link rel="stylesheet" property="stylesheet" href="/modules/system/assets/css/framework.extras.css">
+
+</head>
+
+<body>
+
+
+
+<div class="limiter">
+
+    <div class="container-login100" style="background-image: url('{{ 'assets/img/signup-bg.png'|theme }}');">
+
+        <div class="wrap-login100">
+
+            <!--<form data-request="onRegister" class="login100-form validate-form" method="post">-->
+
+            <form data-request="onSubmitForm" class="login100-form validate-form" method="post">
+
+                <input type="hidden" name="validation_code" value="{{ validation_code }}">
+
+                <img src="{{ 'assets/img/logo.png'|theme }}" style="display: -webkit-box; margin: 0 auto; width: 100px"></img>
+
+
+
+                <span class="login100-form-title p-b-34 p-t-27">
+
+                     اندیشه خوارزم - ثبت نام
+
+                </span>
+
+
+
+                <div id="step02">
+
+                    <div class="wrap-input100 validate-input" id="mobile_number" data-validate = "شماره همراه و نام کاربری شما">
+
+                        <input class="input100" type="text" id="username" name="username" placeholder="شماره همراه" readonly="readonly" value="{{ mobile }}">
+
+                        <span class="focus-input100" data-placeholder="&#xf191;"></span>
+
+                    </div>
+
+
+
+                    <div class="wrap-input100 validate-input" data-validate = "نام و نام خانوادگی را وارد کنید">
+
+                        <input class="input100" type="text" id="name" name="name" placeholder="نام و نام خانوادگی">
+
+                        <span class="focus-input100" data-placeholder="&#xf191;"></span>
+
+                    </div>
+
+
+
+                    <div class="wrap-input100 validate-input" data-validate = "ایمیل را وارد کنید">
+
+                        <input class="input100" type="text" id="email" name="email" placeholder="ایمیل">
+
+                        <span class="focus-input100" data-placeholder="&#xf191;"></span>
+
+                    </div>
+
+
+
+                    <div class="wrap-input100 validate-input" data-validate = "کلمه عبور را وارد کنید">
+
+                        <input class="input100" type="password" id="password" name="password" placeholder="کلمه عبور">
+
+                        <span class="focus-input100" data-placeholder="&#xf191;"></span>
+
+                    </div>
+
+
+
+                    <div class="container-login100-form-btn" id="signup_btn_div">
+
+                        <button class="login100-form-btn" id="signup_btn" name="signup_btn" type="submit">
+
+                            تکمیل ثبت نام
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="text-center p-t-90">
+
+                    <a class="txt1" href="/signin">
+
+                        قبلا ثبت نام کرده اید؟
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<div id="dropDownSelect1"></div>
+
+
+
+<script src="{{ 'assets/vendor/jquery/jquery-3.2.1.min.js'|theme }}"></script>
+
+<script src="{{ 'assets/vendor/animsition/js/animsition.min.js'|theme }}"></script>
+
+<script src="{{ 'assets/vendor/bootstrap/js/popper.js'|theme }}"></script>
+
+<script src="{{ 'assets/vendor/bootstrap/js/bootstrap.min.js'|theme }}"></script>
+
+<script src="{{ 'assets/vendor/select2/select2.min.js'|theme }}"></script>
+
+<script src="{{ 'assets/vendor/daterangepicker/moment.min.js'|theme }}"></script>
+
+<script src="{{ 'assets/vendor/daterangepicker/daterangepicker.js'|theme }}"></script>
+
+<script src="{{ 'assets/vendor/countdowntime/countdowntime.js'|theme }}"></script>
+
+<script src="{{ 'assets/js/main.js'|theme }}"></script>
+
+
+
+{% flash %}
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        $.oc.flashMsg({text: '{{ message }}', 'class': '{{ type }}', 'interval': 10})
+
+    }, false);
+
+</script>
+
+{% endflash %}
+
+
+
+<script src="/modules/system/assets/js/framework.js" defer></script>
+
+<script src="/modules/system/assets/js/framework.extras.js" defer></script>
+
+
+
+</body>
+
+</html>

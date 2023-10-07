@@ -1,0 +1,72 @@
+title = "فرم تست شماره 2"
+url = "/portal/test_form02"
+layout = "panel_form"
+is_hidden = 0
+
+[session]
+security = "user"
+redirect = "signin"
+
+[renderForm]
+formCode = "اطلاعات-عمومی-ساده"
+==
+<?php
+use \rahmanmahdi\kharazm\models\UserInfo;
+use \rahmanmahdi\kharazm\models\Score;
+use System\Models\File;
+
+function onStart()
+{
+  $user = Auth::getUser();
+  $this['user_info'] = UserInfo::where('user_id', $user->id)->first();
+  $this['user_scores'] = Score::where('user_id', $user->id)->whereIn('status', [1, 2])->sum('score');
+}
+
+function onSave()
+{
+  $user = Auth::getUser();
+  $UserInfo = UserInfo::where('user_id', $user->id)->first();
+  if(is_null($UserInfo))
+    $UserInfo = new UserInfo();
+
+  $UserInfo->user_id = $user->id;
+  $UserInfo->national_code = post('national_code');
+  $UserInfo->biography     = post('biography');
+  $UserInfo->save();
+  $user->email = post('email');
+  $user->save();
+  if(Input::hasFile('avatar'))
+  {
+    $avatar = Input::file('avatar');
+    $fileModel = new File();
+    $fileModel->data = $avatar;
+    $fileModel->is_public = true;
+    $fileModel->save();
+    $user->avatar = $fileModel;
+    $user->save();
+  }
+
+  $Score = Score::where('user_id', $user->id)->where('label', 'profile_main_info')->first();
+  if(is_null($Score))
+  {
+    $Score = new Score();
+    $Score->user_id = $user->id;
+    $Score->score = 10;
+    $Score->description = 'تکمیل اطلاعات عمومی پروفایل';
+    $Score->label = 'profile_main_info';
+    $Score->status = 1;
+    $Score->save();
+  }
+
+  Flash::success('اطلاعات شما با موفقیت ثبت شد');
+
+  $user_scores = Score::where('user_id', $user->id)->where('status', 1)->sum('score');
+  if ($user_scores < 10)
+    return Redirect::to('/portal/user_further_information');
+
+  return Redirect::to('/portal');
+
+}
+?>
+==
+{% component 'renderForm' %}

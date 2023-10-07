@@ -1,0 +1,158 @@
+title = "نمایش اطلاعات دوره آموزشی"
+url = "/portal/view_course/:course_id"
+layout = "panel"
+description = "نمایش اطلاعات دوره آموزشی"
+is_hidden = 0
+
+[session]
+security = "user"
+redirect = "signin"
+==
+<?php
+use RainLab\User\Facades\Auth;
+use RahmanMahdi\Kharazm\Models\Score;
+use RahmanMahdi\Kharazm\Models\Course;
+
+function onStart()
+{
+    $user = Auth::getUser();
+    $this['user_scores'] = Score::where('user_id', $user->id)->whereIn('status', [1])->sum('score');
+    $this['money_scores'] = Score::where('user_id', $user->id)->whereIn('status', [2])->sum('score');
+
+    $this['course'] = Course::where('id', $this->param('course_id'))->first();
+}
+
+function onConvertScoreToMoney()
+{
+    $user = Auth::getUser();
+    Db::table('rahmanmahdi_kharazm_scores')->where('user_id', $user->id)->where('status', 1)->update(['status' => 2]);
+    $this['money_scores'] = Score::where('user_id', $user->id)->whereIn('status', [2])->sum('score');
+
+    Flash::success('امتیازات شما به پول تبدیل شد');
+    return Redirect::refresh();
+}
+
+?>
+==
+<!-- BEGIN: Content-->
+    <div class="app-content content">
+      <div class="content-overlay"></div>
+      <div class="content-wrapper">
+        <div class="content-header row">
+          <div class="content-header-left col-12 mb-2 mt-1">
+            <div class="row breadcrumbs-top">
+              <div class="col-12">
+                <h5 class="content-header-title float-left pr-1">نمایش اطلاعات دوره آموزشی</h5>
+                <div class="breadcrumb-wrapper">
+                  <ol class="breadcrumb p-0 mb-0">
+                    <li class="breadcrumb-item"><a href="/portal"><i class="bx bx-home-alt"></i></a></li>
+                    <li class="breadcrumb-item"><a href="/portal/courses">دوره های آموزشی</a></li>
+                    <li class="breadcrumb-item active"> نمایش اطلاعات دوره آموزشی</li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="content-body"><!-- users view start -->
+          <section class="users-view">
+            <!-- users view media object start -->
+            <div class="row">
+              <div class="col-12 col-sm-7">
+                <div class="media mb-2">
+                  <div class="media-body mt-n50">
+                    <h4 class="media-heading"><span class="users-view-name">{{ course.title }} </span></h4>
+                    <span>شناسه:</span>
+                    <span class="users-view-id">{{ course.id }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- users view media object ends -->
+            <!-- users view card data start -->
+            <div class="card">
+              <div class="card-content">
+                <div class="card-body">
+                  <div class="row bg-rgba-primary rounded mb-2 mx-25 text-center text-lg-left">
+                    <div class="col-12 col-sm-6 p-1 p-sm-2">
+                      <h6 class="text-primary mb-0 primary-font">تعداد جلسات: <span class="font-large-1 align-middle">{{ course.sessions_no }}</span></h6>
+                    </div>
+                    <div class="col-12 col-sm-6 p-1 p-sm-2">
+                      <h6 class="text-primary mb-0 primary-font">شرکت کننده ها: <span class="font-large-1 align-middle">0</span></h6>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 col-md-4">
+                      <table class="table table-borderless line-height-2">
+                        <tbody>
+                          <tr>
+                            <td>تاریخ شروع:</td>
+                            <td>{{ course.start_date }}</td>
+                          </tr>
+                          <tr>
+                            <td> مجموع محتوای آموزشی:</td>
+                            <td class="users-view-latest-activity">{{ course.total_hours }}</td>
+                          </tr>
+                          <tr>
+                            <td>برگزار کننده:</td>
+                            <td class="users-view-verified">{{ course.organizer }}</td>
+                          </tr>
+                          <tr>
+                            <td>مدرس:</td>
+                            <td class="users-view-verified">{{ course.teacher }}</td>
+                          </tr>
+                          <tr>
+                            <td>درباره مدرس:</td>
+                            <td class="users-view-verified">{{ course.about_teacher|raw }}</td>
+                          </tr>
+                          <tr>
+                            <td>توضیحات:</td>
+                            <td class="users-view-role">{{ course.description|raw }}</td>
+                          </tr>
+                          <tr>
+                            <td>قیمت (ريال):</td>
+                            <td>
+                              {{ course.price|number_format  }} ريال</a>
+                            </td>
+                          </tr>
+                          {% if user_scores %}
+                          <tr>
+                            <td>تبدیل امتیاز به پول:</td>
+                            <td>
+                              {{ form_ajax('onConvertScoreToMoney', { class: 'form-horizontal'}) }}
+                              <input type="submit" role="menuitem" class="btn btn-primary" value="{{ (user_scores * 100000)|number_format  }} ريال | تبدیل امتیاز به پول"></input>
+                              {{ form_close() }}
+                            </td>
+                          </tr>
+                          {% endif %}
+                          <tr>
+                            <td>ثبت نام:</td>
+                            <td>
+                              {% if money_scores %}
+                              <a href="#" role="menuitem" class="btn btn-success">{{ (course.price - (money_scores * 100000))|number_format }} ريال | ثبت نام</a>
+                              {% else %}
+                              <a href="#" role="menuitem" class="btn btn-success">{{ course.price|number_format }} ريال | ثبت نام</a>
+                              {% endif %}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="col-12 col-md-8">
+                      سرفصل ها:<br>
+                      <p>{{ course.headlines|raw }}</p>
+                      <hr>
+                      پیش نیازها:<br>
+                      <p>{{ course.prerequisites|raw }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- users view card data ends -->
+          </section>
+          <!-- users view ends -->
+        </div>
+      </div>
+    </div>
+    <!-- END: Content-->

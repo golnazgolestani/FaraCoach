@@ -1,0 +1,77 @@
+@font-face {
+    font-family: 'anjoman';
+    src: url("/fonts/iransansweb.ttf");
+}
+
+*
+{
+    font-family: 'anjoman';
+}
+
+a:hover
+{
+    text-decoration: none;
+}
+
+
+#navbartop
+{
+    background-color: transparent;
+}
+
+#bg_header
+{
+    background-color: #730a96;
+}
+
+#carouselClinic img
+{
+    height: 500px;
+}
+
+#carouselClinic button
+{
+    border:none;
+}
+
+footer{
+    background-color: #2fac66;
+}
+
+footer #consultation_request
+{
+    top:-35px;
+}
+
+footer ul
+{
+    list-style-type: none;
+    padding: 0px;
+}
+
+footer li
+{
+    margin-bottom: 10px;
+
+}
+
+footer a
+{
+    color:#FFFFFF;
+}
+
+.coach
+{
+    border-radius: 20px !important;
+    transition: 1s;
+}
+
+.coach:hover
+{
+    box-shadow: 0 1rem 3rem rgba(0,0,0,.175);
+}
+
+#filter_coach
+{
+    border-radius: 20px;
+}

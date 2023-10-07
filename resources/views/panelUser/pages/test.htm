@@ -1,0 +1,67 @@
+title = "تست کد"
+url = "/test"
+layout = "simple"
+description = "تست کد"
+is_hidden = 0
+
+[entryForm]
+==
+<?php
+use \RahmanMahdi\Kharazm\Components\EntryForm;
+function onStart()
+{
+    $parser = new October\Rain\Parse\Yaml;
+    $fields = $parser->ParseFile(plugins_path('rahmanmahdi/kharazm/models/activationcode/columns.yaml'));
+    $this['fields'] = $fields;
+    $data = Db::table('rahmanmahdi_kharazm_activation_code')->get();
+    $this['data'] = $data;
+}
+?>
+==
+<div class="container" style="font-size: 20px; color: #fff; margin-top: 100px; direction: rtl; text-align: right; display: none">
+    <div>
+        {{ fields['columns']['mobile']['label'] }} <br />
+        {{ fields['columns']['code']['label'] }}
+    </div>
+    <ul>
+        {% for item in data %}
+        <li>{{ item.mobile }}:{{ item.code }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="confirm-container bg-success d-none">
+    <p>Successfully created a new entry!</p>
+</div><div class="confirm-container bg-success d-none">
+    <p>Successfully created a new entry!</p>
+</div>
+
+<form role="form" method="post"
+      data-request="{{ entryForm2 }}::onSave"
+      data-request-success="$el.hide();$('.confirm-container').removeClass('d-none');">
+
+    {{ form.formRender()|raw }}
+
+    <div class="form-group">
+        <button class="btn btn-primary btn-block btn-lg" type="submit" value="register">Create</button>
+    </div>
+
+</form>
+
+<form role="form" method="post"
+      data-request="{{ entryForm }}::onSave"
+      data-request-success="$el.hide();$('.confirm-container').removeClass('d-none');">
+
+    {{ form.formRender()|raw }}
+
+    <div class="form-group">
+        <button class="btn btn-primary btn-block btn-lg" type="submit" value="register">Create</button>
+    </div>
+
+</form>
+    </div>
+</div>
+<script src="/acckt/modules/system/assets/js/framework.js"></script>
+<script src="/acckt/modules/system/assets/js/framework.extras.js"></script>

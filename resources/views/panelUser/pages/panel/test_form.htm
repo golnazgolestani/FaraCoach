@@ -1,0 +1,117 @@
+title = "فرم تست"
+url = "/portal/test_form"
+layout = "panel"
+is_hidden = 0
+
+[session]
+security = "user"
+redirect = "signin"
+
+[renderForm]
+formCode = "ثبت-شتاب-گیرنده"
+==
+<?php
+use \rahmanmahdi\kharazm\models\UserInfo;
+use \rahmanmahdi\kharazm\models\Score;
+use System\Models\File;
+
+function onStart()
+{
+  $user = Auth::getUser();
+  $this['user_info'] = UserInfo::where('user_id', $user->id)->first();
+  $this['user_scores'] = Score::where('user_id', $user->id)->whereIn('status', [1, 2])->sum('score');
+}
+
+function onSave()
+{
+  $user = Auth::getUser();
+  $UserInfo = UserInfo::where('user_id', $user->id)->first();
+  if(is_null($UserInfo))
+    $UserInfo = new UserInfo();
+
+  $UserInfo->user_id = $user->id;
+  $UserInfo->national_code = post('national_code');
+  $UserInfo->biography     = post('biography');
+  $UserInfo->save();
+
+  $user->email = post('email');
+  $user->save();
+
+  if(Input::hasFile('avatar'))
+  {
+    $avatar = Input::file('avatar');
+
+    $fileModel = new File();
+    $fileModel->data = $avatar;
+    $fileModel->is_public = true;
+    $fileModel->save();
+
+    $user->avatar = $fileModel;
+    $user->save();
+  }
+
+  $Score = Score::where('user_id', $user->id)->where('label', 'profile_main_info')->first();
+  if(is_null($Score))
+  {
+    $Score = new Score();
+    $Score->user_id = $user->id;
+    $Score->score = 10;
+    $Score->description = 'تکمیل اطلاعات عمومی پروفایل';
+    $Score->label = 'profile_main_info';
+    $Score->status = 1;
+    $Score->save();
+  }
+
+  Flash::success('اطلاعات شما با موفقیت ثبت شد');
+
+  $user_scores = Score::where('user_id', $user->id)->where('status', 1)->sum('score');
+  if ($user_scores < 10)
+    return Redirect::to('/portal/user_further_information');
+
+  return Redirect::to('/portal');
+}
+?>
+==
+<!-- BEGIN: Content-->
+<div class="app-content content">
+  <div class="content-overlay"></div>
+  <div class="content-wrapper">
+    <div class="content-header row">
+      <div class="content-header-left col-12 mb-2 mt-1">
+        <div class="row breadcrumbs-top">
+          <div class="col-12">
+            <h5 class="content-header-title float-left pr-1">تنظیمات حساب کاربری</h5>
+            <div class="breadcrumb-wrapper">
+              <ol class="breadcrumb p-0 mb-0">
+                <li class="breadcrumb-item"><a href="/portal"><i class="bx bx-home-alt"></i></a></li>
+                <li class="breadcrumb-item"> تنظیمات حساب کاربری</li>
+                <li class="breadcrumb-item active">اطلاعات عمومی</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content-body">
+      <section id="page-account-settings">
+        <div class="row">
+          <div class="col-12">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-content">
+                    <div class="card-body">
+						{% component 'renderForm' %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- account setting page ends -->
+  </div>
+</div>
+</div>
+<!-- END: Content-->

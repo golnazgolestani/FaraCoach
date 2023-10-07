@@ -1,0 +1,13 @@
+[searchForm]
+resultPage = "blog/blog"
+categoryFilter = 0
+==
+<section class="widget widget_search">
+    <form class="search-form" method="GET" action="{{ searchForm.resultPage|page }}">
+        <label>
+            <!--<span class="screen-reader-text">جستجو:</span>-->
+            <input type="text" name="search" class="search-field form-control" placeholder="جستجو ...">
+        </label>
+        <button type="submit" class="search-btn btn btn-primary"><i class="bx bx-search-alt" data-feather="search"></i></button>
+    </form>
+</section>

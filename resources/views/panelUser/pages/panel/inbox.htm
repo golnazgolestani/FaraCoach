@@ -1,0 +1,1049 @@
+title = "کارتابل - نامه های وارده"
+url = "/portal/inbox"
+layout = "panel"
+description = "کارتابل - نامه های وارده"
+is_hidden = 0
+
+[session]
+security = "user"
+redirect = "signin"
+==
+<?php
+use \rahmanmahdi\kharazm\models\UserInfo;
+use \rahmanmahdi\kharazm\models\Score;
+use System\Models\File;
+
+function onStart()
+{
+  $user = Auth::getUser();
+  $this['user_info'] = UserInfo::where('user_id', $user->id)->first();
+  $this['user_scores'] = Score::where('user_id', $user->id)->whereIn('status', [1, 2])->sum('score');
+}
+
+function onSave()
+{
+  $user = Auth::getUser();
+  $UserInfo = UserInfo::where('user_id', $user->id)->first();
+  if(is_null($UserInfo))
+    $UserInfo = new UserInfo();
+
+  $UserInfo->user_id = $user->id;
+  $UserInfo->national_code = post('national_code');
+  $UserInfo->biography     = post('biography');
+  $UserInfo->save();
+
+  $user->email = post('email');
+  $user->save();
+
+  if(Input::hasFile('avatar'))
+  {
+    $avatar = Input::file('avatar');
+
+    $fileModel = new File();
+    $fileModel->data = $avatar;
+    $fileModel->is_public = true;
+    $fileModel->save();
+
+    $user->avatar = $fileModel;
+    $user->save();
+  }
+
+  $Score = Score::where('user_id', $user->id)->where('label', 'profile_main_info')->first();
+  if(is_null($Score))
+  {
+    $Score = new Score();
+    $Score->user_id = $user->id;
+    $Score->score = 10;
+    $Score->description = 'تکمیل اطلاعات عمومی پروفایل';
+    $Score->label = 'profile_main_info';
+    $Score->status = 1;
+    $Score->save();
+  }
+
+  Flash::success('اطلاعات شما با موفقیت ثبت شد');
+
+  $user_scores = Score::where('user_id', $user->id)->where('status', 1)->sum('score');
+  if ($user_scores < 10)
+    return Redirect::to('/portal/user_further_information');
+
+  return Redirect::to('/portal');
+}
+?>
+==
+{% put styles %}
+<style>
+.email-application .content-area-wrapper .content-right {
+	width:100% !important;
+}
+</style>
+{% endput %}
+<!-- BEGIN: Content-->
+<div class="app-content content email-application">
+      <div class="content-area-wrapper">
+        <div class="content-right">
+          <div class="content-overlay"></div>
+          <div class="content-wrapper">
+            <div class="content-header row">
+            </div>
+            <div class="content-body"><!-- email app overlay -->
+<div class="app-content-overlay"></div>
+<div class="email-app-area">
+  <!-- Email list Area -->
+  <div class="email-app-list-wrapper">
+    <div class="email-app-list">
+      <div class="email-action">
+        <!-- action left start here -->
+        <div class="action-left d-flex align-items-center">
+          <!-- select All checkbox -->
+          <div class="checkbox checkbox-shadow checkbox-sm selectAll mr-50">
+            <input type="checkbox" id="checkboxsmall">
+            <label for="checkboxsmall"></label>
+          </div>
+          <!-- delete unread dropdown -->
+          <ul class="list-inline m-0 d-flex">
+            <li class="list-inline-item mail-delete">
+              <button type="button" class="btn btn-icon action-icon">
+                <span class="fonticon-wrap">
+                  <i class="livicon-evo" data-options="name: trash.svg; size: 24px; style: lines; strokeColor:#475f7b; eventOn:grandparent; duration:0.85;">
+                  </i>
+                </span>
+              </button>
+            </li>
+            <li class="list-inline-item mail-unread">
+              <button type="button" class="btn btn-icon action-icon">
+                <span class="fonticon-wrap d-inline mr-25">
+                  <i class="livicon-evo" data-options="name: envelope-put.svg; size: 24px; style: lines; strokeColor:#475f7b; eventOn:grandparent; duration:0.85;">
+                  </i>
+                </span>
+              </button>
+            </li>
+            <li class="list-inline-item">
+              <div class="dropdown">
+                <button type="button" class="dropdown-toggle btn btn-icon action-icon" id="folder" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="fonticon-wrap">
+                    <i class="livicon-evo" data-options="name: morph-folder.svg; size: 24px; style: lines; strokeColor:#475f7b; eventOn:grandparent; duration:0.85;">
+                    </i>
+                  </span>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="folder">
+                  <a class="dropdown-item" href="#"><i class="bx bx-edit"></i> پیش نویس</a>
+                  <a class="dropdown-item" href="#"><i class="bx bx-info-circle"></i>اسپم</a>
+                  <a class="dropdown-item" href="#"><i class="bx bx-trash"></i>زباله دان</a>
+                </div>
+              </div>
+            </li>
+            <li class="list-inline-item">
+              <div class="dropdown">
+                <button type="button" class="btn btn-icon dropdown-toggle action-icon" id="tag" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="fonticon-wrap">
+                    <i class="livicon-evo" data-options="name: tag.svg; size: 24px; style: lines; strokeColor:#475f7b; eventOn:grandparent; duration:0.85;">
+                    </i>
+                  </span>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="tag">
+                  <a href="#" class="dropdown-item align-items-center">
+                    <span class="bullet bullet-success bullet-sm"></span>
+                    <span>محصول</span>
+                  </a>
+                  <a href="#" class="dropdown-item align-items-center">
+                    <span class="bullet bullet-primary bullet-sm"></span>
+                    <span>کار</span>
+                  </a>
+                  <a href="#" class="dropdown-item align-items-center">
+                    <span class="bullet bullet-warning bullet-sm"></span>
+                    <span>متفرقه</span>
+                  </a>
+                  <a href="#" class="dropdown-item align-items-center">
+                    <span class="bullet bullet-danger bullet-sm"></span>
+                    <span>خانواده</span>
+                  </a>
+                  <a href="#" class="dropdown-item align-items-center">
+                    <span class="bullet bullet-info bullet-sm"></span>
+                    <span> طراحی</span>
+                  </a>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <!-- action left end here -->
+
+        <!-- action right start here -->
+        <div class="action-right d-flex flex-grow-1 align-items-center justify-content-around">
+          <!-- search bar  -->
+          <div class="email-fixed-search flex-grow-1">
+            <div class="sidebar-toggle d-block d-lg-none">
+              <i class="bx bx-menu"></i>
+            </div>
+            <fieldset class="form-group position-relative has-icon-left m-0">
+              <input type="text" class="form-control" id="email-search" placeholder="جستجوی ایمیل">
+              <div class="form-control-position">
+                <i class="bx bx-search"></i>
+              </div>
+            </fieldset>
+          </div>
+          <!-- pagination and page count -->
+          <span class="d-none d-sm-block">1-10 از 653</span>
+          <button class="btn btn-icon email-pagination-prev d-none d-sm-block">
+            <i class="bx bx-chevron-right"></i>
+          </button>
+          <button class="btn btn-icon email-pagination-next d-none d-sm-block">
+            <i class="bx bx-chevron-left"></i>
+          </button>
+        </div>
+      </div>
+      <!-- / action right -->
+
+      <!-- email user list start -->
+      <div class="email-user-list list-group">
+        <ul class="users-list-wrapper media-list">
+          <li class="media mail-read">
+            <div class="user-action">
+              <div class="checkbox-con mr-25">
+                <div class="checkbox checkbox-shadow checkbox-sm">
+                  <input type="checkbox" id="checkboxsmall1">
+                  <label for="checkboxsmall1"></label>
+                </div>
+              </div>
+              <span class="favorite warning">
+                <i class="bx bxs-star"></i>
+              </span>
+            </div>
+            <div class="pr-50">
+              <div class="avatar">
+                <img src="{{ 'portal_assets/images/portrait/small/avatar-s-20.jpg'|theme }}" alt="avtar img holder">
+              </div>
+            </div>
+            <div class="media-body">
+              <div class="user-details">
+                <div class="mail-items">
+                  <span class="list-group-item-text text-truncate">لورم ایپسوم متن ساختگی با تولید سادگی</span>
+                </div>
+                <div class="mail-meta-item">
+                  <span class="float-right">
+                    <span class="mail-date">4:14 ق.ظ</span>
+                  </span>
+                </div>
+              </div>
+              <div class="mail-message">
+                <p class="list-group-item-text truncate mb-0">
+                  لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.
+                </p>
+                <div class="mail-meta-item">
+                  <span class="float-right d-flex align-items-center">
+                    <span class="bullet bullet-success bullet-sm"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="media mail-read">
+            <div class="user-action">
+              <div class="checkbox-con mr-25">
+                <div class="checkbox checkbox-shadow checkbox-sm">
+                  <input type="checkbox" id="checkboxsmall2">
+                  <label for="checkboxsmall2"></label>
+                </div>
+              </div>
+              <span class="favorite"><i class="bx bx-star"></i></span>
+            </div>
+            <div class="pr-50">
+              <div class="avatar">
+                <img class="rounded-circle" src="../../assets/images/portrait/small/avatar-s-17.jpg" alt="Generic placeholder image">
+              </div>
+            </div>
+            <div class="media-body">
+              <div class="user-details">
+                <div class="mail-items">
+                  <span class="list-group-item-text text-truncate">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم</span>
+                </div>
+                <div class="mail-meta-item">
+                  <span class="float-right">
+                    <span class="mail-date">2:15 ق.ظ</span>
+                  </span>
+                </div>
+              </div>
+              <div class="mail-message">
+                <p class="list-group-item-text mb-0 truncate">
+                  لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان
+                </p>
+                <div class="mail-meta-item">
+                  <span class="float-right d-flex align-items-center">
+                    <span class="bullet bullet-danger bullet-sm"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="media">
+            <div class="user-action">
+              <div class="checkbox-con mr-25">
+                <div class="checkbox checkbox-shadow checkbox-sm">
+                  <input type="checkbox" id="checkboxsmall3">
+                  <label for="checkboxsmall3"></label>
+                </div>
+              </div>
+              <span class="favorite">
+                <i class="bx bx-star"></i>
+              </span>
+            </div>
+            <div class="pr-50">
+              <div class="avatar">
+                <img class="rounded-circle" src="../../assets/images/portrait/small/avatar-s-7.jpg" alt="Generic placeholder image">
+              </div>
+            </div>
+            <div class="media-body">
+              <div class="user-details">
+                <div class="mail-items">
+                  <span class="list-group-item-text text-truncate">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم</span>
+                </div>
+                <div class="mail-meta-item">
+                  <span class="float-right">
+                    <span class="mail-date">2:15 ق.ظ</span>
+                  </span>
+                </div>
+              </div>
+              <div class="mail-message">
+                <p class="list-group-item-text mb-0 truncate">
+                  لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک
+                </p>
+                <div class="mail-meta-item">
+                  <span class="float-right d-flex align-items-center">
+                    <i class="bx bx-paperclip mr-50"></i>
+                    <span class="bullet bullet-success bullet-sm"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="media">
+            <div class="user-action">
+              <div class="checkbox-con mr-25">
+                <div class="checkbox checkbox-shadow checkbox-sm">
+                  <input type="checkbox" id="checkboxsmall4">
+                  <label for="checkboxsmall4"></label>
+                </div>
+              </div>
+              <span class="favorite">
+                <i class="bx bx-star"></i>
+              </span>
+            </div>
+            <div class="pr-50">
+              <div class="avatar">
+                <img class="rounded-circle" src="../../assets/images/portrait/small/avatar-s-5.jpg" alt="Generic placeholder image">
+              </div>
+            </div>
+            <div class="media-body">
+              <div class="user-details">
+                <div class="mail-items">
+                  <span class="list-group-item-text text-truncate">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم</span>
+                </div>
+                <div class="mail-meta-item">
+                  <span class="float-right">
+                    <span class="mail-date">دیروز</span>
+                  </span>
+                </div>
+              </div>
+              <div class="mail-message">
+                <p class="list-group-item-text text-truncate mb-0">
+                  لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه
+                </p>
+                <div class="mail-meta-item">
+                  <span class="float-right d-flex align-items-center">
+                    <i class="bx bx-paperclip mr-50"></i>
+                    <span class="bullet bullet-warning bullet-sm"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="media mail-read">
+            <div class="user-action">
+              <div class="checkbox-con mr-25">
+                <div class="checkbox checkbox-shadow checkbox-sm">
+                  <input type="checkbox" id="checkboxsmall5">
+                  <label for="checkboxsmall5"></label>
+                </div>
+              </div>
+              <span class="favorite">
+                <i class="bx bx-star"></i>
+              </span>
+            </div>
+            <div class="pr-50">
+              <div class="avatar">
+                <img class="rounded-circle" src="../../assets/images/portrait/small/avatar-s-3.jpg" alt="Generic placeholder image">
+              </div>
+            </div>
+            <div class="media-body">
+              <div class="user-details">
+                <div class="mail-items">
+                  <span class="list-group-item-text text-truncate mb-0">لورم ایپسوم متن ساختگی با تولید سادگی</span>
+                </div>
+                <div class="mail-meta-item">
+                  <span class="float-right">
+                    <span class="mail-date">15 آذر</span>
+                  </span>
+                </div>
+              </div>
+              <div class="mail-message">
+                <p class="list-group-item-text mb-0 truncate">
+                  لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان
+                </p>
+                <div class="mail-meta-item">
+                  <span class="float-right d-flex align-items-center">
+                    <i class="bx bx-paperclip mr-50"></i>
+                    <span class="bullet bullet-warning bullet-sm"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="media mail-read">
+            <div class="user-action">
+              <div class="checkbox-con mr-25">
+                <div class="checkbox checkbox-shadow checkbox-sm">
+                  <input type="checkbox" id="checkboxsmall6">
+                  <label for="checkboxsmall6"></label>
+                </div>
+              </div>
+              <span class="favorite warning">
+                <i class="bx bxs-star"></i>
+              </span>
+            </div>
+            <div class="pr-50">
+              <div class="avatar">
+                <img class="rounded-circle" src="../../assets/images/portrait/small/avatar-s-8.jpg" alt="Generic placeholder image">
+              </div>
+            </div>
+            <div class="media-body">
+              <div class="user-details">
+                <div class="mail-items">
+                  <span class="list-group-item-text text-truncate mb-0">
+                    لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از
+                  </span>
+                </div>
+                <div class="mail-meta-item">
+                  <span class="float-right">
+                    <span class="mail-date">1399/2/15</span>
+                  </span>
+                </div>
+              </div>
+              <div class="mail-message">
+                <p class="list-group-item-text mb-0 truncate">
+                  لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.</p>
+                <div class="mail-meta-item">
+                  <span class="float-right d-flex align-items-center">
+                    <span class="bullet bullet-info bullet-sm"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="media">
+            <div class="user-action">
+              <div class="checkbox-con mr-25">
+                <div class="checkbox checkbox-shadow checkbox-sm">
+                  <input type="checkbox" id="checkboxsmall7">
+                  <label for="checkboxsmall7"></label>
+                </div>
+              </div>
+              <span class="favorite warning">
+                <i class="bx bxs-star"></i>
+              </span>
+            </div>
+            <div class="pr-50">
+              <div class="avatar">
+                <img class="rounded-circle" src="../../assets/images/portrait/small/avatar-s-11.jpg" alt="Generic placeholder image">
+              </div>
+            </div>
+            <div class="media-body">
+              <div class="user-details">
+                <div class="mail-items">
+                  <span class="list-group-item-text text-truncate mb-0">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم</span>
+                </div>
+                <div class="mail-meta-item">
+                  <span class="float-right">
+                    <span class="mail-date">1399/2/12</span>
+                  </span>
+                </div>
+              </div>
+              <div class="mail-message">
+                <p class="list-group-item-text mb-0 truncate">
+                  لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده
+                </p>
+                <div class="mail-meta-item">
+                  <span class="float-right d-flex align-items-center">
+                    <span class="bullet bullet-success bullet-sm"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="media mail-read">
+            <div class="user-action">
+              <div class="checkbox-con mr-25">
+                <div class="checkbox checkbox-shadow checkbox-sm">
+                  <input type="checkbox" id="checkboxsmall8">
+                  <label for="checkboxsmall8"></label>
+                </div>
+              </div>
+              <span class="favorite">
+                <i class="bx bx-star"></i>
+              </span>
+            </div>
+            <div class="pr-50">
+              <div class="avatar">
+                <img class="rounded-circle" src="../../assets/images/portrait/small/avatar-s-10.jpg" alt="Generic placeholder image">
+              </div>
+            </div>
+            <div class="media-body">
+              <div class="user-details">
+                <div class="mail-items">
+                  <span class="list-group-item-text text-truncate mb-0">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم</span>
+                </div>
+                <div class="mail-meta-item">
+                  <span class="float-right">
+                    <span class="mail-date">19 اردیبهشت</span>
+                  </span>
+                </div>
+              </div>
+              <div class="mail-message">
+                <p class="list-group-item-text mb-0 truncate">
+                  لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه
+                </p>
+                <div class="mail-meta-item">
+                  <span class="float-right d-flex align-items-center">
+                    <span class="bullet bullet-danger bullet-sm"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="media mail-read">
+            <div class="user-action">
+              <div class="checkbox-con mr-25">
+                <div class="checkbox checkbox-shadow checkbox-sm">
+                  <input type="checkbox" id="checkboxsmall9">
+                  <label for="checkboxsmall9"></label>
+                </div>
+              </div>
+              <span class="favorite">
+                <i class="bx bx-star"></i>
+              </span>
+            </div>
+            <div class="pr-50">
+              <div class="avatar">
+                <img class="rounded-circle" src="../../assets/images/portrait/small/avatar-s-6.jpg" alt="Generic placeholder image">
+              </div>
+            </div>
+            <div class="media-body">
+              <div class="user-details">
+                <div class="mail-items">
+                  <span class="list-group-item-text text-truncate mb-0">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم</span>
+                </div>
+                <div class="mail-meta-item">
+                  <span class="float-right">
+                    <span class="mail-date">2 فروردین</span>
+                  </span>
+                </div>
+              </div>
+              <div class="mail-message">
+                <p class="list-group-item-text mb-0 truncate">
+                  لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان
+                </p>
+                <div class="mail-meta-item">
+                  <span class="float-right d-flex align-items-center">
+                    <span class="bullet bullet-info bullet-sm"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="media">
+            <div class="user-action">
+              <div class="checkbox-con mr-25">
+                <div class="checkbox checkbox-shadow checkbox-sm">
+                  <input type="checkbox" id="checkboxsmall10">
+                  <label for="checkboxsmall10"></label>
+                </div>
+              </div>
+              <span class="favorite">
+                <i class="bx bx-star"></i>
+              </span>
+            </div>
+            <div class="pr-50">
+              <div class="avatar">
+                <img class="rounded-circle" src="../../assets/images/portrait/small/avatar-s-9.jpg" alt="Generic placeholder image">
+              </div>
+            </div>
+            <div class="media-body">
+              <div class="user-details">
+                <div class="mail-items">
+                  <span class="list-group-item-text text-truncate mb-0">
+                    لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده
+                  </span>
+                </div>
+                <div class="mail-meta-item">
+                  <span class="float-right">
+                    <span class="mail-date">29 اسفند</span>
+                  </span>
+                </div>
+              </div>
+              <div class="mail-message">
+                <p class="list-group-item-text mb-0 truncate">
+                  لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده
+                </p>
+                <div class="mail-meta-item">
+                  <span class="float-right d-flex align-items-center">
+                    <span class="bullet bullet-info bullet-sm"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="media">
+            <div class="user-action">
+              <div class="checkbox-con mr-25">
+                <div class="checkbox checkbox-shadow checkbox-sm">
+                  <input type="checkbox" id="checkboxsmall11">
+                  <label for="checkboxsmall11"></label>
+                </div>
+              </div>
+              <span class="favorite">
+                <i class="bx bx-star"></i>
+              </span>
+            </div>
+            <div class="pr-50">
+              <div class="avatar">
+                <img class="rounded-circle" src="../../assets/images/portrait/small/avatar-s-20.jpg" alt="Generic placeholder image">
+              </div>
+            </div>
+            <div class="media-body">
+              <div class="user-details">
+                <div class="mail-items">
+                  <span class="list-group-item-text text-truncate mb-0">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم</span>
+                </div>
+                <div class="mail-meta-item">
+                  <span class="float-right">
+                    <span class="mail-date">17 بهمن</span>
+                  </span>
+                </div>
+              </div>
+              <div class="mail-message">
+                <p class="list-group-item-text mb-0 truncate">
+                  لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده
+                </p>
+                <div class="mail-meta-item">
+                  <span class="float-right d-flex align-items-center">
+                    <span class="bullet bullet-warning bullet-sm"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="media mail-read">
+            <div class="user-action">
+              <div class="checkbox-con mr-25">
+                <div class="checkbox checkbox-shadow checkbox-sm">
+                  <input type="checkbox" id="checkboxsmall12">
+                  <label for="checkboxsmall12"></label>
+                </div>
+              </div>
+              <span class="favorite">
+                <i class="bx bx-star"></i>
+              </span>
+            </div>
+            <div class="pr-50">
+              <div class="avatar">
+                <img class="rounded-circle" src="../../assets/images/portrait/small/avatar-s-17.jpg" alt="Generic placeholder image">
+              </div>
+            </div>
+            <div class="media-body">
+              <div class="user-details">
+                <div class="mail-items">
+                  <span class="list-group-item-text text-truncate mb-0"> لورم ایپسوم متن ساختگی با تولید </span>
+                </div>
+                <div class="mail-meta-item">
+                  <span class="float-right">
+                    <span class="mail-date">21 تیر</span>
+                  </span>
+                </div>
+              </div>
+              <div class="mail-message">
+                <p class="list-group-item-text mb-0 truncate">
+                  لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده
+                </p>
+                <div class="mail-meta-item">
+                  <span class="float-right d-flex align-items-center">
+                    <span class="bullet bullet-warning bullet-sm"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <!-- email user list end -->
+
+        <!-- no result when nothing to show on list -->
+        <div class="no-results">
+          <i class="bx bx-error-circle font-large-2"></i>
+          <h5>موردی یافت نشد</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--/ Email list Area -->
+
+  <!-- Detailed Email View -->
+  <div class="email-app-details">
+    <!-- email detail view header -->
+    <div class="email-detail-header">
+      <div class="email-header-left d-flex align-items-center mb-1">
+        <span class="go-back mr-50">
+          <span class="fonticon-wrap d-inline">
+            <i class="livicon-evo" data-options="name: chevron-right.svg; size: 32px; style: lines; strokeColor:#475f7b; eventOn:grandparent; duration:0.85;">
+            </i>
+          </span>
+        </span>
+        <h5 class="email-detail-title font-weight-normal mb-0">
+          لورم ایپسوم متن ساختگی با تولید
+          <span class="badge badge-light-danger badge-pill ml-1">محصول</span>
+        </h5>
+      </div>
+      <div class="email-header-right mb-1 ml-2 pl-1">
+        <ul class="list-inline m-0">
+          <li class="list-inline-item">
+            <button class="btn btn-icon action-icon">
+              <span class="fonticon-wrap">
+                <i class="livicon-evo" data-options="name: trash.svg; size: 24px; style: lines; strokeColor:#475f7b; eventOn:grandparent; duration:0.85;">
+                </i>
+              </span>
+            </button>
+          </li>
+          <li class="list-inline-item">
+            <button class="btn btn-icon action-icon">
+              <span class="fonticon-wrap">
+                <i class="livicon-evo" data-options="name: envelope-put.svg; size: 24px; style: lines; strokeColor:#475f7b; eventOn:grandparent; duration:0.85;">
+                </i>
+              </span>
+            </button>
+          </li>
+          <li class="list-inline-item">
+            <div class="dropdown">
+              <button class="btn btn-icon dropdown-toggle action-icon" id="open-mail-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="fonticon-wrap">
+                  <i class="livicon-evo" data-options="name: morph-folder.svg; size: 24px; style: lines; strokeColor:#475f7b; eventOn:grandparent; duration:0.85;">
+                  </i>
+                </span>
+              </button>
+              <div class="dropdown-menu" aria-labelledby="open-mail-menu">
+                <a class="dropdown-item" href="#"><i class="bx bx-edit"></i> پیش نویس</a>
+                <a class="dropdown-item" href="#"><i class="bx bx-info-circle"></i> اسپم</a>
+                <a class="dropdown-item" href="#"><i class="bx bx-trash"></i> زباله دان</a>
+              </div>
+            </div>
+          </li>
+          <li class="list-inline-item">
+            <div class="dropdown">
+              <button class="btn btn-icon dropdown-toggle action-icon" id="open-mail-tag" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="fonticon-wrap">
+                  <i class="livicon-evo" data-options="name: tag.svg; size: 24px; style: lines; strokeColor:#475f7b; eventOn:grandparent; duration:0.85;">
+                  </i>
+                </span>
+              </button>
+              <div class="dropdown-menu" aria-labelledby="open-mail-tag">
+                <a href="#" class="dropdown-item align-items-center">
+                  <span class="bullet bullet-success bullet-sm"></span>
+                  محصول
+                </a>
+                <a href="#" class="dropdown-item align-items-center">
+                  <span class="bullet bullet-primary bullet-sm"></span>
+                  کار
+                </a>
+                <a href="#" class="dropdown-item align-items-center">
+                  <span class="bullet bullet-warning bullet-sm"></span>
+                  متفرقه
+                </a>
+                <a href="#" class="dropdown-item align-items-center">
+                  <span class="bullet bullet-danger bullet-sm"></span>
+                  خانواده
+                </a>
+                <a href="#" class="dropdown-item align-items-center">
+                  <span class="bullet bullet-info bullet-sm"></span>
+                  طراحی
+                </a>
+              </div>
+            </div>
+          </li>
+          <li class="list-inline-item">
+            <span class="no-of-list d-none d-sm-block ml-1">1-10 از 653</span>
+          </li>
+          <li class="list-inline-item">
+            <button class="btn btn-icon email-pagination-prev action-icon">
+              <i class="bx bx-chevron-right"></i>
+            </button>
+          </li>
+          <li class="list-inline-item">
+            <button class="btn btn-icon email-pagination-next action-icon">
+              <i class="bx bx-chevron-left"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- email detail view header end-->
+    <div class="email-scroll-area">
+      <!-- email details  -->
+      <div class="row">
+        <div class="col-12">
+          <div class="collapsible email-detail-head">
+            <div class="card collapse-header" role="tablist">
+              <div id="headingCollapse5" class="card-header d-flex justify-content-between align-items-center" data-toggle="collapse" role="tab" data-target="#collapse5" aria-expanded="false" aria-controls="collapse5">
+                <div class="collapse-title media align-items-center">
+                  <div class="pr-1">
+                    <div class="avatar mr-75">
+                      <img src="../../assets/images/portrait/small/avatar-s-18.jpg" alt="avtar img holder" width="30" height="30">
+                    </div>
+                  </div>
+                  <div class="media-body">
+                    <span class="text-primary">تونی استارک</span>
+                    <span class="d-sm-inline d-none"> &lt;elnora@gmail.com&gt;</span>
+                    <small class="text-muted d-block">به استیو راجرز</small>
+                  </div>
+                </div>
+                <div class="information d-sm-flex d-none align-items-center">
+                  <small class="text-muted mr-50">15 اردیبهشت 1399، 10:30</small>
+                  <span class="favorite">
+                    <i class="bx bx-star mr-25"></i>
+                  </span>
+                  <div class="dropdown">
+                    <a href="#" class="dropdown-toggle" id="fisrt-open-submenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="bx bx-dots-vertical-rounded mr-0"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="fisrt-open-submenu">
+                      <a href="#" class="dropdown-item mail-reply">
+                        <i class="bx bx-share"></i>
+                        پاسخ
+                      </a>
+                      <a href="#" class="dropdown-item">
+                        <i class="bx bx-redo"></i>
+                        فوروارد
+                      </a>
+                      <a href="#" class="dropdown-item">
+                        <i class="bx bx-info-circle"></i>
+                        گزارش اسپم
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="collapse5" role="tabpanel" aria-labelledby="headingCollapse5" class="collapse">
+                <div class="card-content">
+                  <div class="card-body py-1">
+                    <p class="text-bold-500">تبریک!</p>
+                    <p>
+                      لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می
+                    </p>
+                    <p>
+                      لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه
+                    </p>
+                    <p class="mb-0">با عرض ادب و احترام</p>
+                    <p class="text-bold-500">تیم طراحی قالب</p>
+                  </div>
+                  <div class="card-footer pt-0 border-top">
+                    <label class="sidebar-label">فایل های ضمیمه شده</label>
+                    <ul class="list-unstyled mb-0">
+                      <li class="cursor-pointer pb-25">
+                        <img src="../../assets/images/icon/psd.png" height="30" alt="psd.png">
+                        <small class="text-muted ml-1 attchement-text">uikit-design.psd</small>
+                      </li>
+                      <li class="cursor-pointer">
+                        <img src="../../assets/images/icon/sketch.png" height="30" alt="sketch.png">
+                        <small class="text-muted ml-1 attchement-text">uikit-design.sketch</small>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card collapse-header" role="tablist">
+              <div id="headingCollapse6" class="card-header d-flex justify-content-between align-items-center" data-toggle="collapse" role="tab" data-target="#collapse6" aria-expanded="false" aria-controls="collapse6">
+                <div class="collapse-title media align-items-center">
+                  <div class="pr-1">
+                    <div class="avatar mr-75">
+                      <img src="../../assets/images/portrait/small/avatar-s-19.jpg" alt="avtar img holder" width="30" height="30">
+                    </div>
+                  </div>
+                  <div class="media-body">
+                    <span class="text-primary">پیتر پارکر </span>
+                    <span class="d-sm-inline d-none"> &lt;peter@gmail.com&gt;</span>
+                    <small class="text-muted d-block">به تونی استارک</small>
+                  </div>
+                </div>
+                <div class="information d-sm-flex d-none align-items-center">
+                  <i class="bx bx-paperclip mr-50"></i>
+                  <small class="text-muted mr-50">10 اردیبهشت 1399، 10:30</small>
+                  <span class="favorite">
+                    <i class="bx bx-star mr-25"></i>
+                  </span>
+                  <div class="dropdown">
+                    <a href="#" class="dropdown-toggle" id="second-open-submenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="bx bx-dots-vertical-rounded mr-0"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="second-open-submenu">
+                      <a href="#" class="dropdown-item mail-reply">
+                        <i class="bx bx-share"></i>
+                        پاسخ
+                      </a>
+                      <a href="#" class="dropdown-item">
+                        <i class="bx bx-redo"></i>
+                        فوروارد
+                      </a>
+                      <a href="#" class="dropdown-item">
+                        <i class="bx bx-info-circle"></i>
+                        گزارش اسپم
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="collapse6" role="tabpanel" aria-labelledby="headingCollapse7" class="collapse">
+                <div class="card-content">
+                  <div class="card-body py-1">
+                    <p class="text-bold-500">تبریک!</p>
+                    <p>
+                      لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد. کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد تا با نرم
+                    </p>
+                    <p>
+                      لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد. کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت
+                    </p>
+                    <p class="mb-0">با عرض ادب و احترام</p>
+                    <p class="text-bold-500">تیم طراحی قالب</p>
+                  </div>
+                  <div class="card-footer pt-0 border-top">
+                    <label class="sidebar-label">فایل های ضمیمه شده</label>
+                    <ul class="list-unstyled mb-0">
+                      <li class="cursor-pointer pb-25">
+                        <img src="../../assets/images/icon/psd.png" height="30" alt="psd.png">
+                        <small class="text-muted ml-1 attchement-text">uikit-design.psd</small>
+                      </li>
+                      <li class="cursor-pointer">
+                        <img src="../../assets/images/icon/sketch.png" height="30" alt="sketch.png">
+                        <small class="text-muted ml-1 attchement-text">uikit-design.sketch</small>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card collapse-header open" role="tablist">
+              <div id="headingCollapse7" class="card-header d-flex justify-content-between align-items-center" data-toggle="collapse" role="tab" data-target="#collapse7" aria-expanded="false" aria-controls="collapse7">
+                <div class="collapse-title media align-items-center">
+                  <div class="pr-1">
+                    <div class="avatar mr-75">
+                      <img src="../../assets/images/portrait/small/avatar-s-18.jpg" alt="avtar img holder" width="30" height="30">
+                    </div>
+                  </div>
+                  <div class="media-body">
+                    <span class="text-primary">تونی استارک</span>
+                    <span class="d-sm-inline d-none">&lt;elnora@gmail.com&gt;</span>
+                    <small class="text-muted d-block">به استیو راجرز</small>
+                  </div>
+                </div>
+                <div class="information d-sm-flex d-none align-items-center">
+                  <small class="text-muted mr-50">5 فروردین 1399، 10:30</small>
+                  <span class="favorite warning">
+                    <i class="bx bxs-star mr-25"></i>
+                  </span>
+                  <div class="dropdown">
+                    <a href="#" class="dropdown-toggle" id="third-open-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="bx bx-dots-vertical-rounded mr-0"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="second-open-submenu">
+                      <a href="#" class="dropdown-item mail-reply">
+                        <i class="bx bx-share"></i>
+                        پاسخ
+                      </a>
+                      <a href="#" class="dropdown-item">
+                        <i class="bx bx-redo"></i>
+                        فوروارد
+                      </a>
+                      <a href="#" class="dropdown-item">
+                        <i class="bx bx-info-circle"></i>
+                        گزارش اسپم
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="collapse7" role="tabpanel" aria-labelledby="headingCollapse7" class="collapse show">
+                <div class="card-content">
+                  <div class="card-body py-1">
+                    <p class="text-bold-500">تبریک!</p>
+                    <p>
+                      لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد. کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده
+                    </p>
+                    <p>
+                      لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای
+                    </p>
+                    <p class="mb-0">با عرض ادب و احترام</p>
+                    <p class="text-bold-500">تیم طراحی قالب</p>
+                  </div>
+                  <div class="card-footer pt-0 border-top">
+                    <label class="sidebar-label">فایل های ضمیمه شده</label>
+                    <ul class="list-unstyled mb-0">
+                      <li class="cursor-pointer pb-25">
+                        <img src="../../assets/images/icon/psd.png" height="30" alt="psd.png">
+                        <small class="text-muted ml-1 attchement-text">uikit-design.psd</small>
+                      </li>
+                      <li class="cursor-pointer">
+                        <img src="../../assets/images/icon/sketch.png" height="30" alt="sketch.png">
+                        <small class="text-muted ml-1 attchement-text">uikit-design.sketch</small>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- email details  end-->
+      <div class="row px-2 mb-4">
+        <!-- quill editor for reply message -->
+        <div class="col-12 px-0">
+          <div class="card shadow-none border rounded">
+            <div class="card-body quill-wrapper">
+              <span>پاسخ به تونی استارک</span>
+              <div class="snow-container" id="detail-view-quill">
+                <div class="detail-view-editor"></div>
+                <div class="d-flex justify-content-end">
+                  <div class="detail-quill-toolbar">
+                    <span class="ql-formats mr-50">
+                      <button class="ql-bold"></button>
+                      <button class="ql-italic"></button>
+                      <button class="ql-underline"></button>
+                      <button class="ql-link"></button>
+                      <button class="ql-image"></button>
+                    </span>
+                  </div>
+                  <button class="btn btn-primary send-btn">
+                    <i class="bx bx-send mr-25"></i>
+                    <span class="d-none d-sm-inline"> ارسال</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--/ Detailed Email View -->
+</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+<!-- END: Content-->
